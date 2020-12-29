@@ -1,4 +1,4 @@
-module goinfras-tool
+module gt
 
 go 1.15
 
