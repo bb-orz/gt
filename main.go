@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/urfave/cli/v2"
+	"gt/cmd"
 	"time"
 )
 
@@ -19,5 +20,10 @@ func main()  {
 	app.Action = func(c *cli.Context) error {
 		fmt.Println("gt (goinfras tool) is a generation tool of go app scaffold which base on bb-orz/goinfras.")
 		return nil
+	}
+
+	app.Commands = []*cli.Command {
+		cmd.InitCommand(), // 初始化命令
+
 	}
 }
