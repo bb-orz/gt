@@ -1,4 +1,4 @@
-package goinfras_tool
+package main
 
 import (
 	"fmt"
