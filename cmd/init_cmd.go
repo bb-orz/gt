@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/urfave/cli/v2"
-	"gt/libs"
+	"gt/libs/libInit"
 	"gt/utils"
 	"os"
 )
@@ -61,7 +61,7 @@ func initCommandFunc(ctx *cli.Context) error {
 
 	utils.CommandLogger.Info(utils.CommandNameInit, "Directory Checking ... ")
 	// 检查当前目录是否有权限读写
-	if err = libs.CheckDirMode(); err != nil {
+	if err = libInit.CheckDirMode(); err != nil {
 		utils.CommandLogger.Error(utils.CommandNameInit, err)
 		return nil
 	}
@@ -79,13 +79,13 @@ func initCommandFunc(ctx *cli.Context) error {
 	utils.CommandLogger.Info(utils.CommandNameInit, "Pull Scaffold Sample ... ")
 	switch sampleFlag {
 	case "sample":
-		if err := libs.GitCloneSample(nameFlag); err != nil {
+		if err := libInit.GitCloneSample(nameFlag); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameInit, err)
 			return err
 		}
 		utils.CommandLogger.OK(utils.CommandNameInit, "git clone sample scaffold successful!")
 	case "account":
-		if err := libs.GitCloneAccount(nameFlag); err != nil {
+		if err := libInit.GitCloneAccount(nameFlag); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameInit, err)
 			return err
 		}
@@ -96,7 +96,7 @@ func initCommandFunc(ctx *cli.Context) error {
 	modFlag = ctx.Bool("mod")
 	utils.CommandLogger.Info(utils.CommandNameInit, fmt.Sprintf("Mod:%v", modFlag))
 	if modFlag {
-		if version, b := libs.CheckGoMod(); b {
+		if version, b := libInit.CheckGoMod(); b {
 			utils.CommandLogger.OK(utils.CommandNameInit, fmt.Sprintf("Current Version:%s, enable to go mod! ", version))
 		} else {
 			utils.CommandLogger.Error(utils.CommandNameInit, errors.New(fmt.Sprintf("Current Version:%s, not enable to go mod! ", version)))
@@ -110,7 +110,7 @@ func initCommandFunc(ctx *cli.Context) error {
 		}
 
 		if nameFlag != "goapp" {
-			err = libs.ReplaceMainPackageNAme(pwd, nameFlag)
+			err = libInit.ReplaceMainPackageNAme(pwd, nameFlag)
 			if err != nil {
 				utils.CommandLogger.Error(utils.CommandNameInit, err)
 				return nil
@@ -120,7 +120,7 @@ func initCommandFunc(ctx *cli.Context) error {
 		}
 
 		tidyCmd := `cd ` + nameFlag + ` && go mod tidy`
-		err = libs.ExecShellCommand(tidyCmd)
+		err = libInit.ExecShellCommand(tidyCmd)
 		if err != nil {
 			utils.CommandLogger.Error(utils.CommandNameInit, err)
 			return nil
@@ -135,7 +135,7 @@ func initCommandFunc(ctx *cli.Context) error {
 	if gitFlag {
 		utils.CommandLogger.Info(utils.CommandNameInit, "Git init ... ")
 		InitGitCmd := "cd " + nameFlag + " && git init && git checkout -b dev"
-		err := libs.ExecShellCommand(InitGitCmd)
+		err := libInit.ExecShellCommand(InitGitCmd)
 		if err != nil {
 			utils.CommandLogger.Error(utils.CommandNameInit, err)
 		}

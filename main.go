@@ -26,7 +26,8 @@ func main() {
 	}
 
 	app.Commands = []*cli.Command{
-		cmd.InitCommand(), // 初始化命令
+		cmd.InitCommand(),    // 初始化命令
+		cmd.ServiceCommand(), // 创建服务接口命令
 
 	}
 
