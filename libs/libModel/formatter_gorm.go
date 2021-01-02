@@ -3,6 +3,8 @@ package libModel
 import (
 	"fmt"
 	"gt/utils"
+	"io"
+	"text/template"
 )
 
 func NewFormatterGormStruct() *FormatterGormStruct {
@@ -15,6 +17,7 @@ type FormatterGormStruct struct {
 
 func (f *FormatterGormStruct) Format(tableName string, cols []Column) IFormatter {
 	f.PackageName = tableName
+	f.ImportList = make(map[string]ImportItem)
 	f.StructName = utils.CamelString(tableName)
 	f.TableName = tableName
 	f.FieldList = make([]Field, len(cols))
@@ -23,6 +26,9 @@ func (f *FormatterGormStruct) Format(tableName string, cols []Column) IFormatter
 		colType, err := col.GetType()
 		if nil != err {
 			continue
+		}
+		if colType == CTypeTime {
+			f.ImportList["time"] = ImportItem{Alias: "", Package: "time"}
 		}
 		f.FieldList[idx] = Field{
 			Name:      col.GetName(),
@@ -33,7 +39,37 @@ func (f *FormatterGormStruct) Format(tableName string, cols []Column) IFormatter
 	return f
 }
 
-func (f *FormatterGormStruct) WriteOut() error {
+func (f *FormatterGormStruct) WriteOut(writer io.Writer) error {
 	utils.CommandLogger.Info(utils.CommandNameModel, fmt.Sprintf("Formatter:%+v \n", f))
+	err := template.Must(template.New("GormStruct").Parse(GormStructCodeTemplate)).Execute(writer, *f)
+	if err != nil {
+		utils.CommandLogger.Error(utils.CommandNameModel, err)
+	}
 	return nil
 }
+
+const GormStructCodeTemplate = `
+package {{ .PackageName }}
+
+import (
+	{{- range .ImportList }}
+	{{ .Alias }} "{{ .Package }}"
+	{{- end}}
+)
+
+const {{ .StructName }}TableName = "{{ .TableName }}"
+
+// {{ .StructName }} is a mapping object for {{ .TableName }} table in mysql
+type {{.StructName}} struct {
+{{- range .FieldList }}
+	{{ .Name }} {{ .Type }} {{ .StructTag }}
+{{- end}}
+}
+
+func (*{{ .StructName }}) TableName() string {
+	return {{ .StructName }}TableName
+}
+
+
+
+`

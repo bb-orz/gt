@@ -45,6 +45,7 @@ func GetTableSchema(db *sql.DB, dbName, tableName string) ([]Column, error) {
 	var where = map[string]interface{}{
 		"TABLE_NAME":   tableName,
 		"TABLE_SCHEMA": dbName,
+		"_orderby":     "ORDINAL_POSITION asc",
 	}
 	var selectFields = []string{"COLUMN_NAME", "COLUMN_TYPE", "COLUMN_COMMENT"}
 	cond, vals, err := builder.BuildSelect(cDefaultTable, where, selectFields)

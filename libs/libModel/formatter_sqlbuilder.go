@@ -3,6 +3,7 @@ package libModel
 import (
 	"fmt"
 	"gt/utils"
+	"io"
 )
 
 func NewFormatterSqlBuilderStruct() *FormatterGormStruct {
@@ -33,7 +34,7 @@ func (f *FormatterSqlBuilderStruct) Format(tableName string, cols []Column) IFor
 	return f
 }
 
-func (f *FormatterSqlBuilderStruct) WriteOut() error {
+func (f *FormatterSqlBuilderStruct) WriteOut(writer io.Writer) error {
 
 	return nil
 }
