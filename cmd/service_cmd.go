@@ -1,6 +1,9 @@
 package cmd
 
-import "github.com/urfave/cli/v2"
+import (
+	"github.com/urfave/cli/v2"
+	"gt/libs/libService"
+)
 
 func ServiceCommand() *cli.Command {
 	return &cli.Command{
@@ -21,6 +24,11 @@ func ServiceCommand() *cli.Command {
 }
 
 func serviceCommandFunc(ctx *cli.Context) error {
+	// var nameFlag string
+	// nameFlag = ctx.String("name")
+
+	// 先检查是否已存在该service
+	libService.IsServiceExist()
 
 	return nil
 }

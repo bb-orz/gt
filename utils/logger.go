@@ -7,8 +7,9 @@ import (
 
 // 启动步骤常量
 const (
-	AppCmd          = "APP" // application
-	CommandNameInit = "Init"
+	AppCmd           = "APP" // application
+	CommandNameInit  = "Init"
+	CommandNameModel = "Model"
 )
 
 // 日志等级命名常量
@@ -60,6 +61,8 @@ func (p *LogFormatterParams) CommandColor() string {
 		return cyan
 	case CommandNameInit:
 		return yellow
+	case CommandNameModel:
+		return blue
 
 	default:
 		return white

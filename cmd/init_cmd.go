@@ -61,7 +61,7 @@ func initCommandFunc(ctx *cli.Context) error {
 
 	utils.CommandLogger.Info(utils.CommandNameInit, "Directory Checking ... ")
 	// 检查当前目录是否有权限读写
-	if err = libInit.CheckDirMode(); err != nil {
+	if err = utils.CheckDirMode(); err != nil {
 		utils.CommandLogger.Error(utils.CommandNameInit, err)
 		return nil
 	}
@@ -74,6 +74,14 @@ func initCommandFunc(ctx *cli.Context) error {
 		return nil
 	}
 
+	// 初始化设置文件
+	utils.CommandLogger.Info(utils.CommandNameInit, "Init Setting File ... ")
+	if err = utils.InitSetting(nameFlag, sampleFlag); err != nil {
+		utils.CommandLogger.Error(utils.CommandNameInit, err)
+		return nil
+	}
+	utils.CommandLogger.OK(utils.CommandNameInit, "Create Setting File Successful! ")
+
 	// 拉取脚手架模板
 	sampleFlag = ctx.String("sample")
 	utils.CommandLogger.Info(utils.CommandNameInit, "Pull Scaffold Sample ... ")
@@ -81,13 +89,13 @@ func initCommandFunc(ctx *cli.Context) error {
 	case "sample":
 		if err := libInit.GitCloneSample(nameFlag); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameInit, err)
-			return err
+			return nil
 		}
 		utils.CommandLogger.OK(utils.CommandNameInit, "git clone sample scaffold successful!")
 	case "account":
 		if err := libInit.GitCloneAccount(nameFlag); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameInit, err)
-			return err
+			return nil
 		}
 		utils.CommandLogger.OK(utils.CommandNameInit, "git clone account scaffold successful!")
 	}
@@ -110,7 +118,7 @@ func initCommandFunc(ctx *cli.Context) error {
 		}
 
 		if nameFlag != "goapp" {
-			err = libInit.ReplaceMainPackageNAme(pwd, nameFlag)
+			err = utils.ReplaceMainPackageNAme(pwd, nameFlag)
 			if err != nil {
 				utils.CommandLogger.Error(utils.CommandNameInit, err)
 				return nil
@@ -120,7 +128,7 @@ func initCommandFunc(ctx *cli.Context) error {
 		}
 
 		tidyCmd := `cd ` + nameFlag + ` && go mod tidy`
-		err = libInit.ExecShellCommand(tidyCmd)
+		err = utils.ExecShellCommand(tidyCmd)
 		if err != nil {
 			utils.CommandLogger.Error(utils.CommandNameInit, err)
 			return nil
@@ -135,7 +143,7 @@ func initCommandFunc(ctx *cli.Context) error {
 	if gitFlag {
 		utils.CommandLogger.Info(utils.CommandNameInit, "Git init ... ")
 		InitGitCmd := "cd " + nameFlag + " && git init && git checkout -b dev"
-		err := libInit.ExecShellCommand(InitGitCmd)
+		err := utils.ExecShellCommand(InitGitCmd)
 		if err != nil {
 			utils.CommandLogger.Error(utils.CommandNameInit, err)
 		}
