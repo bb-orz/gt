@@ -34,6 +34,7 @@ func (f *FormatterSqlBuilderStruct) Format(tableName string, cols []Column) IFor
 			Name:      col.GetName(),
 			Type:      colType,
 			StructTag: fmt.Sprintf("`ddb:\"%s\" json:\"%s\"`", col.Name, col.Name),
+			Comment:   col.GetComment(),
 		}
 	}
 	return f
@@ -66,6 +67,25 @@ type {{.StructName}} struct {
 }
 
 func (*{{ .StructName }}) TableName() string {
-	return {{ .StructName }}TableName
+	return {{ .StructName }}TableName	 	// {{ .Comment }}
 }
+
+
+// To DTO
+func (m *{{ .StructName }}) ToDTO() *dtos.{{ .StructName }}DTO {
+	return &dtos.{{ .StructName }}DTO{
+		{{- range .FieldList }}
+			{{ .Name }} : m.{{ .Name }},
+		{{- end}}
+	}
+}
+
+// From DTO
+func (m *{{ .StructName }}) FromDTO(dto *dtos.{{ .StructName }}DTO) {
+	{{- range .FieldList }}
+		m.{{ .Name }} = dto.{{ .Name }}
+	{{- end}}
+}
+
+
 `

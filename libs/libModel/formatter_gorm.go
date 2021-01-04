@@ -34,6 +34,7 @@ func (f *FormatterGormStruct) Format(tableName string, cols []Column) IFormatter
 			Name:      col.GetName(),
 			Type:      colType,
 			StructTag: fmt.Sprintf("`gorm:\"%s\" json:\"%s\"`", col.Name, col.Name),
+			Comment:   col.GetComment(),
 		}
 	}
 	return f
@@ -54,6 +55,7 @@ import (
 	{{- range .ImportList }}
 	{{ .Alias }} "{{ .Package }}"
 	{{- end}}
+	"goapp/dtos"
 )
 
 const {{ .StructName }}TableName = "{{ .TableName }}"
@@ -61,11 +63,30 @@ const {{ .StructName }}TableName = "{{ .TableName }}"
 // {{ .StructName }} is a mapping object for {{ .TableName }} table in mysql
 type {{.StructName}} struct {
 {{- range .FieldList }}
-	{{ .Name }} {{ .Type }} {{ .StructTag }}
+	{{ .Name }} {{ .Type }} {{ .StructTag }} 	// {{ .Comment }}
 {{- end}}
 }
 
 func (*{{ .StructName }}) TableName() string {
 	return {{ .StructName }}TableName
 }
+
+
+// To DTO
+func (m *{{ .StructName }}) ToDTO() *dtos.{{ .StructName }}DTO {
+	return &dtos.{{ .StructName }}DTO{
+		{{- range .FieldList }}
+			{{ .Name }} : m.{{ .Name }},
+		{{- end}}
+	}
+}
+
+// From DTO
+func (m *{{ .StructName }}) FromDTO(dto *dtos.{{ .StructName }}DTO) {
+	{{- range .FieldList }}
+		m.{{ .Name }} = dto.{{ .Name }}
+	{{- end}}
+}
+
+
 `

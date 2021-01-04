@@ -56,6 +56,10 @@ func (c *Column) GetDTOType() (string, error) {
 	return matchType, nil
 }
 
+func (c *Column) GetComment() string {
+	return c.Comment
+}
+
 // 读取数据库schema表结构表，获取表结构的列信息
 func GetTableSchema(db *sql.DB, dbName, tableName string) ([]Column, error) {
 	var where = map[string]interface{}{
@@ -79,5 +83,6 @@ func GetTableSchema(db *sql.DB, dbName, tableName string) ([]Column, error) {
 	if nil != err {
 		return nil, err
 	}
+	// utils.CommandLogger.Info(utils.CommandNameModel, fmt.Sprintf("%+v \n", ts))
 	return ts, nil
 }

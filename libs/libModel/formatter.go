@@ -21,6 +21,7 @@ type Field struct {
 	Name      string
 	Type      string
 	StructTag string
+	Comment   string
 }
 
 type ImportItem struct {

@@ -36,8 +36,9 @@ func (f *FormatterDTOStruct) Format(tableName string, cols []Column) IFormatter 
 			continue
 		}
 		field := Field{
-			Name: col.GetName(),
-			Type: colType,
+			Name:    col.GetName(),
+			Type:    colType,
+			Comment: col.GetComment(),
 		}
 
 		field.StructTag = fmt.Sprintf("`validate:\"required,%s\" json:\"%s\"`", dtoType, col.Name)
@@ -66,7 +67,7 @@ import (
 // {{ .StructName }} is a mapping object for {{ .TableName }} table in mysql
 type {{.StructName}} struct {
 {{- range .FieldList }}
-	{{ .Name }} {{ .Type }} {{ .StructTag }}
+	{{ .Name }} {{ .Type }} {{ .StructTag }} 		// {{ .Comment }}
 {{- end}}
 }
 
