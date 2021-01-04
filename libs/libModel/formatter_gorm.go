@@ -67,6 +67,10 @@ type {{.StructName}} struct {
 {{- end}}
 }
 
+func New{{.StructName}}() *{{.StructName}} {
+	return new({{.StructName}})
+}
+
 func (*{{ .StructName }}) TableName() string {
 	return {{ .StructName }}TableName
 }
