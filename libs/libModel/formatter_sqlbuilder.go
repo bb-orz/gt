@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"gt/utils"
 	"io"
+	"text/template"
 )
 
-func NewFormatterSqlBuilderStruct() *FormatterGormStruct {
-	return new(FormatterGormStruct)
+func NewFormatterSqlBuilderStruct() *FormatterSqlBuilderStruct {
+	return new(FormatterSqlBuilderStruct)
 }
 
 type FormatterSqlBuilderStruct struct {
@@ -16,6 +17,7 @@ type FormatterSqlBuilderStruct struct {
 
 func (f *FormatterSqlBuilderStruct) Format(tableName string, cols []Column) IFormatter {
 	f.PackageName = tableName
+	f.ImportList = make(map[string]ImportItem)
 	f.StructName = utils.CamelString(tableName)
 	f.TableName = tableName
 	f.FieldList = make([]Field, len(cols))
@@ -24,6 +26,9 @@ func (f *FormatterSqlBuilderStruct) Format(tableName string, cols []Column) IFor
 		colType, err := col.GetType()
 		if nil != err {
 			continue
+		}
+		if colType == CTypeTime {
+			f.ImportList["time"] = ImportItem{Alias: "", Package: "time"}
 		}
 		f.FieldList[idx] = Field{
 			Name:      col.GetName(),
@@ -35,6 +40,32 @@ func (f *FormatterSqlBuilderStruct) Format(tableName string, cols []Column) IFor
 }
 
 func (f *FormatterSqlBuilderStruct) WriteOut(writer io.Writer) error {
-
+	err := template.Must(template.New("SqlBuilderStruct").Parse(SqlBuilderStructCodeTemplate)).Execute(writer, *f)
+	if err != nil {
+		utils.CommandLogger.Error(utils.CommandNameModel, err)
+	}
 	return nil
 }
+
+const SqlBuilderStructCodeTemplate = `
+package {{ .PackageName }}
+
+import (
+	{{- range .ImportList }}
+	{{ .Alias }} "{{ .Package }}"
+	{{- end}}
+)
+
+const {{ .StructName }}TableName = "{{ .TableName }}"
+
+// {{ .StructName }} is a mapping object for {{ .TableName }} table in mysql
+type {{.StructName}} struct {
+{{- range .FieldList }}
+	{{ .Name }} {{ .Type }} {{ .StructTag }}
+{{- end}}
+}
+
+func (*{{ .StructName }}) TableName() string {
+	return {{ .StructName }}TableName
+}
+`

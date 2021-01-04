@@ -7,18 +7,18 @@ import (
 	"text/template"
 )
 
-func NewFormatterGormStruct() *FormatterGormStruct {
-	return new(FormatterGormStruct)
+func NewFormatterDTOStruct() *FormatterDTOStruct {
+	return new(FormatterDTOStruct)
 }
 
-type FormatterGormStruct struct {
+type FormatterDTOStruct struct {
 	FormatterStruct
 }
 
-func (f *FormatterGormStruct) Format(tableName string, cols []Column) IFormatter {
-	f.PackageName = tableName
+func (f *FormatterDTOStruct) Format(tableName string, cols []Column) IFormatter {
+	f.PackageName = "dtos"
 	f.ImportList = make(map[string]ImportItem)
-	f.StructName = utils.CamelString(tableName)
+	f.StructName = utils.CamelString(tableName) + "DTO"
 	f.TableName = tableName
 	f.FieldList = make([]Field, len(cols))
 
@@ -30,24 +30,31 @@ func (f *FormatterGormStruct) Format(tableName string, cols []Column) IFormatter
 		if colType == CTypeTime {
 			f.ImportList["time"] = ImportItem{Alias: "", Package: "time"}
 		}
-		f.FieldList[idx] = Field{
-			Name:      col.GetName(),
-			Type:      colType,
-			StructTag: fmt.Sprintf("`gorm:\"%s\" json:\"%s\"`", col.Name, col.Name),
+
+		dtoType, err := col.GetDTOType()
+		if nil != err {
+			continue
 		}
+		field := Field{
+			Name: col.GetName(),
+			Type: colType,
+		}
+
+		field.StructTag = fmt.Sprintf("`validate:\"required,%s\" json:\"%s\"`", dtoType, col.Name)
+		f.FieldList[idx] = field
 	}
 	return f
 }
 
-func (f *FormatterGormStruct) WriteOut(writer io.Writer) error {
-	err := template.Must(template.New("GormStruct").Parse(GormStructCodeTemplate)).Execute(writer, *f)
+func (f *FormatterDTOStruct) WriteOut(writer io.Writer) error {
+	err := template.Must(template.New("DTOStruct").Parse(DTOStructCodeTemplate)).Execute(writer, *f)
 	if err != nil {
 		utils.CommandLogger.Error(utils.CommandNameModel, err)
 	}
 	return nil
 }
 
-const GormStructCodeTemplate = `
+const DTOStructCodeTemplate = `
 package {{ .PackageName }}
 
 import (
@@ -56,8 +63,6 @@ import (
 	{{- end}}
 )
 
-const {{ .StructName }}TableName = "{{ .TableName }}"
-
 // {{ .StructName }} is a mapping object for {{ .TableName }} table in mysql
 type {{.StructName}} struct {
 {{- range .FieldList }}
@@ -65,7 +70,4 @@ type {{.StructName}} struct {
 {{- end}}
 }
 
-func (*{{ .StructName }}) TableName() string {
-	return {{ .StructName }}TableName
-}
 `

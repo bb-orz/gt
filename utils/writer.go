@@ -12,9 +12,6 @@ func CreateFile(fileName string) (io.Writer, error) {
 
 	_, err = os.Stat(fileName)
 	if err != nil {
-		if os.IsExist(err) {
-			return nil, err
-		}
 		if os.IsNotExist(err) {
 			dir := path.Dir(fileName)
 			dirInfo, err := os.Stat(dir)
@@ -24,8 +21,8 @@ func CreateFile(fileName string) (io.Writer, error) {
 					if err != nil {
 						return nil, err
 					}
+					dirInfo, err = os.Stat(dir)
 				}
-				return nil, err
 			}
 			if dirInfo.IsDir() {
 				file, err = os.OpenFile(fileName, os.O_CREATE|os.O_RDWR, os.ModePerm)
@@ -34,6 +31,11 @@ func CreateFile(fileName string) (io.Writer, error) {
 				}
 			}
 		}
+	}
+
+	file, err = os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, os.ModePerm)
+	if err != nil {
+		return nil, err
 	}
 
 	return file, nil

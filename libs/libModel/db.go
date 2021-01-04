@@ -20,6 +20,7 @@ type CmdCfg struct {
 	User       string `json:"user"`
 	Password   string `json:"password"`
 	OutputPath string `json:"output_path"`
+	Formatter  string `json:"formatter"`
 }
 
 func GetDBInstance(cfg *CmdCfg) (*sql.DB, error) {

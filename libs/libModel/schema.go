@@ -16,6 +16,7 @@ const (
 type Column struct {
 	Name    string `json:"COLUMN_NAME"`
 	Type    string `json:"COLUMN_TYPE"`
+	DTOTag  string
 	Comment string `json:"COLUMN_COMMENT"`
 }
 
@@ -31,6 +32,21 @@ func (c *Column) GetType() (string, error) {
 		typer := wrapper(c.Type)
 		if typer.Match() {
 			matchType = typer.Type()
+		}
+	}
+
+	if "" == matchType {
+		return "", errUnknownType(c.Name, c.Type)
+	}
+	return matchType, nil
+}
+
+func (c *Column) GetDTOType() (string, error) {
+	var matchType string
+	for _, wrapper := range TyperDTOWrappers {
+		typer := wrapper(c.Type)
+		if typer.MatchDTO() {
+			matchType = typer.TypeDTO()
 		}
 	}
 
