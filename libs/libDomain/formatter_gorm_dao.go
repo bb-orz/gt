@@ -71,6 +71,12 @@ func (d *{{ .StructName }}DAO) isExist(where *{{ .StructName }}) (bool, error) {
 	return false, nil
 }
 
+// 查找id是否存在
+func (d *{{ .StructName }}DAO) IsIdExist(id uint) (bool, error) {
+	return d.isExist(&{{ .StructName }}{Id: id})
+}
+
+
 // 通过Id查找
 func (d *{{ .StructName }}DAO) GetById(id uint) (*dtos.{{ .StructName }}DTO, error) {
 	var err error
@@ -107,7 +113,7 @@ func (d *{{ .StructName }}DAO) Create(dto *dtos.{{ .StructName }}DTO) (*dtos.{{ 
 
 
 // 设置单个信息字段
-func (d *{{ .StructName }}DAO) Set(id uint, field string, value interface{}) error {
+func (d *{{ .StructName }}DAO) Set{{ .StructName }}(id uint, field string, value interface{}) error {
 	var err error
 	if err = XGorm.XDB().Model(&{{ .StructName }}{}).Where("id", id).Update(field, value).Error; err != nil {
 		return err

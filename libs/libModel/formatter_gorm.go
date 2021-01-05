@@ -29,6 +29,7 @@ func (f *FormatterGormStruct) Format(tableName string, cols []Column) IFormatter
 		}
 		if colType == CTypeTime {
 			f.ImportList["time"] = ImportItem{Alias: "", Package: "time"}
+			// f.ImportList["gorm"] = ImportItem{Alias: "", Package: "gorm.io/gorm"}
 		}
 		f.FieldList[idx] = Field{
 			Name:      col.GetName(),

@@ -56,6 +56,12 @@ func (d *{{ .StructName }}DAO) isExist(where *{{ .StructName }}) (bool, error) {
 	return false, nil
 }
 
+// 查找id是否存在
+func (d *{{ .StructName }}DAO) IsIdExist(id uint) (bool, error) {
+
+	return false,nil
+}
+
 // 通过Id查找
 func (d *{{ .StructName }}DAO) GetById(id uint) (*dtos.{{ .StructName }}DTO, error) {
 	
@@ -72,7 +78,7 @@ func (d *{{ .StructName }}DAO) Create(dto *dtos.{{ .StructName }}DTO) (*dtos.{{ 
 
 
 // 设置单个信息字段
-func (d *{{ .StructName }}DAO) Set(id uint, field string, value interface{}) error {
+func (d *{{ .StructName }}DAO) Set{{ .StructName }}(id uint, field string, value interface{}) error {
 	
 	return nil
 }
