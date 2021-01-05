@@ -16,11 +16,11 @@ func RPCCommand() *cli.Command {
 				Usage:   "[[--name|-n=]RPCName]",
 			},
 		},
-		Action: rpcCommandFunc,
+		Action: RPCCommandAction,
 	}
 }
 
-func rpcCommandFunc(ctx *cli.Context) error {
+func RPCCommandAction(ctx *cli.Context) error {
 
 	return nil
 }

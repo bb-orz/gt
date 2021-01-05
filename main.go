@@ -25,9 +25,9 @@ func main() {
 	}
 
 	app.Commands = []*cli.Command{
-		cmd.InitCommand(),  // 初始化命令
-		cmd.ModelCommand(), // 创建数据库表模型命令
-
+		cmd.InitCommand(),   // 初始化命令
+		cmd.ModelCommand(),  // 创建数据库表模型命令
+		cmd.DomainCommand(), // 创建领域模块
 	}
 
 	err := app.Run(os.Args)

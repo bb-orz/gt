@@ -48,11 +48,7 @@ func (f *FormatterDTOStruct) Format(tableName string, cols []Column) IFormatter 
 }
 
 func (f *FormatterDTOStruct) WriteOut(writer io.Writer) error {
-	err := template.Must(template.New("DTOStruct").Parse(DTOStructCodeTemplate)).Execute(writer, *f)
-	if err != nil {
-		utils.CommandLogger.Error(utils.CommandNameModel, err)
-	}
-	return nil
+	return template.Must(template.New("DTOTemplate").Parse(DTOStructCodeTemplate)).Execute(writer, *f)
 }
 
 const DTOStructCodeTemplate = `

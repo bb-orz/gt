@@ -19,11 +19,11 @@ func ServiceCommand() *cli.Command {
 				Usage:   "[[--name|-n=]ServiceName]",
 			},
 		},
-		Action: serviceCommandFunc,
+		Action: ServiceCommandAction,
 	}
 }
 
-func serviceCommandFunc(ctx *cli.Context) error {
+func ServiceCommandAction(ctx *cli.Context) error {
 	// var nameFlag string
 	// nameFlag = ctx.String("name")
 

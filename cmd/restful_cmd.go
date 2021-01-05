@@ -16,11 +16,11 @@ func RestfulCommand() *cli.Command {
 				Usage:   "[[--name|-n=]RestfulName]",
 			},
 		},
-		Action: restfulCommandFunc,
+		Action: RestfulCommandAction,
 	}
 }
 
-func restfulCommandFunc(ctx *cli.Context) error {
+func RestfulCommandAction(ctx *cli.Context) error {
 
 	return nil
 }

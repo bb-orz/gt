@@ -41,11 +41,11 @@ func InitCommand() *cli.Command {
 				Usage:   "[--git|-g=true|false]",
 			},
 		},
-		Action: initCommandFunc,
+		Action: InitCommandAction,
 	}
 }
 
-func initCommandFunc(ctx *cli.Context) error {
+func InitCommandAction(ctx *cli.Context) error {
 	var err error
 	var fileInfo os.FileInfo
 	var nameFlag string
@@ -73,14 +73,6 @@ func initCommandFunc(ctx *cli.Context) error {
 		utils.CommandLogger.Error(utils.CommandNameInit, errors.New("Directory is existed, please try again! "))
 		return nil
 	}
-
-	// 初始化设置文件
-	utils.CommandLogger.Info(utils.CommandNameInit, "Init Setting File ... ")
-	if err = utils.InitSetting(nameFlag, sampleFlag); err != nil {
-		utils.CommandLogger.Error(utils.CommandNameInit, err)
-		return nil
-	}
-	utils.CommandLogger.OK(utils.CommandNameInit, "Create Setting File Successful! ")
 
 	// 拉取脚手架模板
 	sampleFlag = ctx.String("sample")

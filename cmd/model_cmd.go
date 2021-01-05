@@ -23,12 +23,12 @@ func ModelCommand() *cli.Command {
 			&cli.StringFlag{Name: "output_path", Aliases: []string{"o"}, Value: "./core/"},
 			&cli.StringFlag{Name: "formatter", Aliases: []string{"f"}, Value: "gorm"},
 		},
-		Action: modelCommandFunc,
+		Action: ModelCommandAction,
 	}
 }
 
-func modelCommandFunc(ctx *cli.Context) error {
-	cmdCfg := &libModel.CmdCfg{
+func ModelCommandAction(ctx *cli.Context) error {
+	cmdParams := &libModel.CmdParams{
 		Driver:     ctx.String("driver"),
 		Host:       ctx.String("host"),
 		Port:       ctx.Int("port"),
@@ -41,73 +41,77 @@ func modelCommandFunc(ctx *cli.Context) error {
 	}
 
 	// 获取db连接实例
-	db, err := libModel.GetDBInstance(cmdCfg)
+	db, err := libModel.GetDBInstance(cmdParams)
 	if err != nil {
 		utils.CommandLogger.Error(utils.CommandNameModel, err)
 		return nil
 	}
 
-	// 把数据库连接参数写进setting配置
-
 	// 获取表结构
-	columns, err := libModel.GetTableSchema(db, cmdCfg.DbName, cmdCfg.Table)
+	columns, err := libModel.GetTableSchema(db, cmdParams.DbName, cmdParams.Table)
 	if err != nil {
 		utils.CommandLogger.Error(utils.CommandNameModel, err)
 		return nil
 	}
 
 	// 使用表结构生成go代码
-	switch cmdCfg.Formatter {
+	switch cmdParams.Formatter {
 	case "gorm":
 		// 创建输出文件
-		fileName := cmdCfg.OutputPath + cmdCfg.Table + "/" + cmdCfg.Table + "_model.go"
+		fileName := cmdParams.OutputPath + cmdParams.Table + "/" + cmdParams.Table + "_model.go"
 		writer, err := utils.CreateFile(fileName)
 		if err != nil {
 			utils.CommandLogger.Error(utils.CommandNameModel, err)
 			return nil
+		} else {
+			utils.CommandLogger.OK(utils.CommandNameModel, fmt.Sprintf("Create Gorm %s Model Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Table), fileName))
 		}
 
 		// 格式化输出
-		err = libModel.NewFormatterGormStruct().Format(cmdCfg.Table, columns).WriteOut(writer)
-		if err != nil {
+		if err = libModel.NewFormatterGormStruct().Format(cmdParams.Table, columns).WriteOut(writer); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameModel, err)
 			return nil
+		} else {
+			utils.CommandLogger.OK(utils.CommandNameModel, "Write Gorm %s Model Successful!")
 		}
-		utils.CommandLogger.OK(utils.CommandNameModel, fmt.Sprintf("Generate Gorm %s Model Successful! >>> FilePath：%s", utils.CamelString(cmdCfg.Table), fileName))
 	case "sqlbuilder":
 		// 创建输出文件
-		fileName := cmdCfg.OutputPath + cmdCfg.Table + "/" + cmdCfg.Table + "_model.go"
+		fileName := cmdParams.OutputPath + cmdParams.Table + "/" + cmdParams.Table + "_model.go"
 		writer, err := utils.CreateFile(fileName)
 		if err != nil {
 			utils.CommandLogger.Error(utils.CommandNameModel, err)
 			return nil
+		} else {
+			utils.CommandLogger.OK(utils.CommandNameModel, fmt.Sprintf("Create SqlBuilder %s Model Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Table), fileName))
 		}
 
 		// 格式化输出
-		err = libModel.NewFormatterSqlBuilderStruct().Format(cmdCfg.Table, columns).WriteOut(writer)
-		if err != nil {
+		if err = libModel.NewFormatterSqlBuilderStruct().Format(cmdParams.Table, columns).WriteOut(writer); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameModel, err)
 			return nil
+		} else {
+			utils.CommandLogger.OK(utils.CommandNameModel, "Write SqlBuilder %s Model Successful!")
 		}
-		utils.CommandLogger.OK(utils.CommandNameModel, fmt.Sprintf("Generate SqlBuilder %s Model Successful! >>> FilePath：%s", utils.CamelString(cmdCfg.Table), fileName))
 	}
 
 	// 生成model相关DTO
 	// 创建输出文件
-	dtoFileName := "./dtos/" + cmdCfg.Table + "_dto.go"
+	dtoFileName := "./dtos/" + cmdParams.Table + "_dto.go"
 	dtoWriter, err := utils.CreateFile(dtoFileName)
 	if err != nil {
 		utils.CommandLogger.Error(utils.CommandNameModel, err)
 		return nil
+	} else {
+		utils.CommandLogger.OK(utils.CommandNameModel, fmt.Sprintf("Create %s DTO Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Table), dtoFileName))
 	}
 
 	// 格式化输出
-	err = libModel.NewFormatterDTOStruct().Format(cmdCfg.Table, columns).WriteOut(dtoWriter)
-	if err != nil {
+	if err = libModel.NewFormatterDTOStruct().Format(cmdParams.Table, columns).WriteOut(dtoWriter); err != nil {
 		utils.CommandLogger.Error(utils.CommandNameModel, err)
 		return nil
+	} else {
+		utils.CommandLogger.OK(utils.CommandNameModel, "Write %s DTO Successful!")
 	}
-	utils.CommandLogger.OK(utils.CommandNameModel, fmt.Sprintf("Generate %s DTO Successful! >>> FilePath：%s", utils.CamelString(cmdCfg.Table), dtoFileName))
 
 	return nil
 }

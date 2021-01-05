@@ -41,11 +41,7 @@ func (f *FormatterSqlBuilderStruct) Format(tableName string, cols []Column) IFor
 }
 
 func (f *FormatterSqlBuilderStruct) WriteOut(writer io.Writer) error {
-	err := template.Must(template.New("SqlBuilderStruct").Parse(SqlBuilderStructCodeTemplate)).Execute(writer, *f)
-	if err != nil {
-		utils.CommandLogger.Error(utils.CommandNameModel, err)
-	}
-	return nil
+	return template.Must(template.New("SqlBuilderTemplate").Parse(SqlBuilderStructCodeTemplate)).Execute(writer, *f)
 }
 
 const SqlBuilderStructCodeTemplate = `
