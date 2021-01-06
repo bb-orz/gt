@@ -15,7 +15,7 @@ type FormatterGinEngine struct {
 }
 
 func (f *FormatterGinEngine) Format(name string) IFormatter {
-	f.PackageName = "core"
+	f.PackageName = "restful"
 	f.StructName = utils.CamelString(name)
 	f.RouteGroup = utils.SnakeString(name)
 	f.ImportList = make(map[string]ImportItem)
@@ -31,8 +31,7 @@ func (f *FormatterGinEngine) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("GinRestfulTemplate").Parse(GinRestfulCodeTemplate)).Execute(writer, *f)
 }
 
-const GinRestfulCodeTemplate = `
-package {{ .PackageName }}
+const GinRestfulCodeTemplate = `package {{ .PackageName }}
 
 import (
 	{{- range .ImportList }}
@@ -54,7 +53,7 @@ type {{ .StructName }}Api struct {}
 // SetRouter由Gin Engine 启动时调用
 func (s *{{ .StructName }}Api) SetRoutes() {
 	engine := XGin.XEngine()
-	{{ .RouteGroup }}Group := engine.Group({{ .RouteGroup }})
+	{{ .RouteGroup }}Group := engine.Group("{{ .RouteGroup }}")
 	{{ .RouteGroup }}Group.GET("/foo", s.Foo)
 	{{ .RouteGroup }}Group.GET("/bar", s.Bar)
 }

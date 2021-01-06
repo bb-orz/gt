@@ -51,8 +51,7 @@ func (f *FormatterDTO) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("DTOTemplate").Parse(DTOCodeTemplate)).Execute(writer, *f)
 }
 
-const DTOCodeTemplate = `
-package {{ .PackageName }}
+const DTOCodeTemplate = `package {{ .PackageName }}
 
 import (
 	{{- range .ImportList }}

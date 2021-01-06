@@ -29,8 +29,7 @@ func (f *FormatterDomain) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("DomainTemplate").Parse(DomainCodeTemplate)).Execute(writer, *f)
 }
 
-const DomainCodeTemplate = `
-package {{ .PackageName }}
+const DomainCodeTemplate = `package {{ .PackageName }}
 
 import (
 	{{- range .ImportList }}

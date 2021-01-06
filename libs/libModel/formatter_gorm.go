@@ -45,8 +45,7 @@ func (f *FormatterGorm) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("GormTemplate").Parse(GormStructCodeTemplate)).Execute(writer, *f)
 }
 
-const GormStructCodeTemplate = `
-package {{ .PackageName }}
+const GormStructCodeTemplate = `package {{ .PackageName }}
 
 import (
 	{{- range .ImportList }}

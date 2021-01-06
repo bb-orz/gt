@@ -27,8 +27,7 @@ func (f *FormatterServiceInterface) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("ServiceInterfaceTemplate").Parse(ServiceInterfaceCodeTemplate)).Execute(writer, *f)
 }
 
-const ServiceInterfaceCodeTemplate = `
-package {{ .PackageName }}
+const ServiceInterfaceCodeTemplate = `package {{ .PackageName }}
 
 import (
 	{{- range .ImportList }}

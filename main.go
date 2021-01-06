@@ -29,6 +29,7 @@ func main() {
 		cmd.ModelCommand(),   // 创建数据库表模型命令
 		cmd.DomainCommand(),  // 创建领域模块命令
 		cmd.ServiceCommand(), // 服务创建命令
+		cmd.RestfulCommand(), // Restful API创建命令
 	}
 
 	err := app.Run(os.Args)

@@ -31,8 +31,7 @@ func (f *FormatterServiceImplement) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("ServiceImplementTemplate").Parse(ServiceImplementCodeTemplate)).Execute(writer, *f)
 }
 
-const ServiceImplementCodeTemplate = `
-package {{ .PackageName }}
+const ServiceImplementCodeTemplate = `package {{ .PackageName }}
 
 import (
 	{{- range .ImportList }}

@@ -44,8 +44,7 @@ func (f *FormatterSqlBuilder) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("SqlBuilderTemplate").Parse(SqlBuilderStructCodeTemplate)).Execute(writer, *f)
 }
 
-const SqlBuilderStructCodeTemplate = `
-package {{ .PackageName }}
+const SqlBuilderStructCodeTemplate = `package {{ .PackageName }}
 
 import (
 	{{- range .ImportList }}

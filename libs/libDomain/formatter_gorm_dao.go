@@ -30,8 +30,7 @@ func (f *FormatterDomainGormDao) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("DomainGormDaoTemplate").Parse(DomainGormDaoCodeTemplate)).Execute(writer, *f)
 }
 
-const DomainGormDaoCodeTemplate = `
-package {{ .PackageName }}
+const DomainGormDaoCodeTemplate = `package {{ .PackageName }}
 
 import (
 	{{- range .ImportList }}

@@ -16,7 +16,7 @@ type FormatterEchoEngine struct {
 
 func (f *FormatterEchoEngine) Format(name string) IFormatter {
 
-	f.PackageName = "core"
+	f.PackageName = "restful"
 	f.StructName = utils.CamelString(name)
 	f.RouteGroup = utils.SnakeString(name)
 	f.ImportList = make(map[string]ImportItem)
@@ -32,9 +32,7 @@ func (f *FormatterEchoEngine) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("EchoRestfulTemplate").Parse(EchoRestfulCodeTemplate)).Execute(writer, *f)
 }
 
-const EchoRestfulCodeTemplate = `
-
-package {{ .PackageName }}
+const EchoRestfulCodeTemplate = `package {{ .PackageName }}
 
 import (
 	{{- range .ImportList }}
@@ -46,7 +44,7 @@ func init() {
 	var once sync.Once
 	once.Do(func() {
 		// 初始化时自动注册该API到Echo Engine
-		XGin.RegisterApi(new({{ .StructName }}Api))
+		XEcho.RegisterApi(new({{ .StructName }}Api))
 	})
 
 }
@@ -56,7 +54,7 @@ type {{ .StructName }}Api struct {}
 // SetRouter由Echo Engine 启动时调用
 func (s *{{ .StructName }}Api) SetRoutes() {
 	engine := XEcho.XEngine()
-	{{ .RouteGroup }}Group := engine.Group({{ .RouteGroup }})
+	{{ .RouteGroup }}Group := engine.Group("{{ .RouteGroup }}")
 	{{ .RouteGroup }}Group.GET("/foo", s.Foo)
 	{{ .RouteGroup }}Group.GET("/bar", s.Bar)
 }

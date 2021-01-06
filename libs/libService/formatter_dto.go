@@ -30,9 +30,7 @@ func (f *FormatterServiceDto) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("ServiceDTOTemplate").Parse(ServiceDTOCodeTemplate)).Execute(writer, *f)
 }
 
-const ServiceDTOCodeTemplate = `
-package {{ .PackageName }}
-
+const ServiceDTOCodeTemplate = `package {{ .PackageName }}
 
 // FooDTO is a example data transfer object for {{ .StructName }} Service
 type FooDTO struct {
