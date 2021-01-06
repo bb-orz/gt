@@ -23,6 +23,7 @@ func DomainCommand() *cli.Command {
 			&cli.StringFlag{Name: "user", Aliases: []string{"u"}, Value: "dev"},
 			&cli.StringFlag{Name: "password", Aliases: []string{"p"}, Value: "123456"},
 			&cli.StringFlag{Name: "output_path", Aliases: []string{"o"}, Value: "./core"},
+			&cli.StringFlag{Name: "dto_output_path", Aliases: []string{"O"}, Value: "./dtos"},
 			&cli.StringFlag{Name: "formatter", Aliases: []string{"f"}, Value: "gorm"},
 		},
 		Action: DomainCommandAction,
@@ -32,16 +33,17 @@ func DomainCommand() *cli.Command {
 func DomainCommandAction(ctx *cli.Context) error {
 	// 接收领域名参数，创建领域代码文件
 	cmdParams := &libDomain.CmdParams{
-		Name:       ctx.String("name"),
-		Driver:     ctx.String("driver"),
-		Host:       ctx.String("host"),
-		Port:       ctx.Int("port"),
-		DbName:     ctx.String("database"),
-		Table:      ctx.String("table"),
-		User:       ctx.String("user"),
-		Password:   ctx.String("password"),
-		OutputPath: ctx.String("output_path"),
-		Formatter:  ctx.String("formatter"),
+		Name:        ctx.String("name"),
+		Driver:      ctx.String("driver"),
+		Host:        ctx.String("host"),
+		Port:        ctx.Int("port"),
+		DbName:      ctx.String("database"),
+		Table:       ctx.String("table"),
+		User:        ctx.String("user"),
+		Password:    ctx.String("password"),
+		OutputPath:  ctx.String("output_path"),
+		DOutputPath: ctx.String("dto_output_path"),
+		Formatter:   ctx.String("formatter"),
 	}
 
 	domainFile, daoFile, testFile, err := libDomain.CreateDomainFile(cmdParams)
