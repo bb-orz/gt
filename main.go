@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"gt/cmd"
@@ -26,18 +25,11 @@ func main() {
 	}
 
 	app.Commands = []*cli.Command{
-		cmd.InitCommand(), // 初始化命令
-
-	}
-
-	app.Action = func(ctx *cli.Context) error {
-		utils.CommandLogger.Debug(utils.AppCmd, "debug log ...")
-		utils.CommandLogger.Info(utils.AppCmd, "info log ...")
-		utils.CommandLogger.Warning(utils.AppCmd, "warning log ...")
-		utils.CommandLogger.Error(utils.AppCmd, errors.New("error log ... "))
-		utils.CommandLogger.Fail(utils.AppCmd, errors.New("fail log ... "))
-
-		return nil
+		cmd.InitCommand(),    // 初始化命令
+		cmd.ModelCommand(),   // 创建数据库表模型命令
+		cmd.DomainCommand(),  // 创建领域模块命令
+		cmd.ServiceCommand(), // 服务创建命令
+		cmd.RestfulCommand(), // Restful API创建命令
 	}
 
 	err := app.Run(os.Args)
