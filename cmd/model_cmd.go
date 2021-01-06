@@ -20,7 +20,8 @@ func ModelCommand() *cli.Command {
 			&cli.StringFlag{Name: "table", Aliases: []string{"t"}, Required: true},
 			&cli.StringFlag{Name: "user", Aliases: []string{"u"}, Value: "dev"},
 			&cli.StringFlag{Name: "password", Aliases: []string{"p"}, Value: "123456"},
-			&cli.StringFlag{Name: "output_path", Aliases: []string{"o"}, Value: "./core/"},
+			&cli.StringFlag{Name: "output_path", Aliases: []string{"o"}, Value: "./core"},
+			&cli.StringFlag{Name: "dto_output_path", Aliases: []string{"O"}, Value: "./dtos"},
 			&cli.StringFlag{Name: "formatter", Aliases: []string{"f"}, Value: "gorm"},
 		},
 		Action: ModelCommandAction,
@@ -29,15 +30,16 @@ func ModelCommand() *cli.Command {
 
 func ModelCommandAction(ctx *cli.Context) error {
 	cmdParams := &libModel.CmdParams{
-		Driver:     ctx.String("driver"),
-		Host:       ctx.String("host"),
-		Port:       ctx.Int("port"),
-		DbName:     ctx.String("database"),
-		Table:      ctx.String("table"),
-		User:       ctx.String("user"),
-		Password:   ctx.String("password"),
-		OutputPath: ctx.String("output_path"),
-		Formatter:  ctx.String("formatter"),
+		Driver:      ctx.String("driver"),
+		Host:        ctx.String("host"),
+		Port:        ctx.Int("port"),
+		DbName:      ctx.String("database"),
+		Table:       ctx.String("table"),
+		User:        ctx.String("user"),
+		Password:    ctx.String("password"),
+		OutputPath:  ctx.String("output_path"),
+		DOutputPath: ctx.String("dto_output_path"),
+		Formatter:   ctx.String("formatter"),
 	}
 
 	// 获取db连接实例
@@ -58,7 +60,7 @@ func ModelCommandAction(ctx *cli.Context) error {
 	switch cmdParams.Formatter {
 	case "gorm":
 		// 创建输出文件
-		fileName := cmdParams.OutputPath + cmdParams.Table + "/" + cmdParams.Table + "_model.go"
+		fileName := cmdParams.OutputPath + "/" + cmdParams.Table + "/" + cmdParams.Table + "_model.go"
 		writer, err := utils.CreateFile(fileName)
 		if err != nil {
 			utils.CommandLogger.Error(utils.CommandNameModel, err)
@@ -76,7 +78,7 @@ func ModelCommandAction(ctx *cli.Context) error {
 		}
 	case "sqlbuilder":
 		// 创建输出文件
-		fileName := cmdParams.OutputPath + cmdParams.Table + "/" + cmdParams.Table + "_model.go"
+		fileName := cmdParams.OutputPath + "/" + cmdParams.Table + "/" + cmdParams.Table + "_model.go"
 		writer, err := utils.CreateFile(fileName)
 		if err != nil {
 			utils.CommandLogger.Error(utils.CommandNameModel, err)
@@ -96,7 +98,7 @@ func ModelCommandAction(ctx *cli.Context) error {
 
 	// 生成model相关DTO
 	// 创建输出文件
-	dtoFileName := "./dtos/" + cmdParams.Table + "_dto.go"
+	dtoFileName := cmdParams.DOutputPath + "/" + cmdParams.Table + "_dto.go"
 	dtoWriter, err := utils.CreateFile(dtoFileName)
 	if err != nil {
 		utils.CommandLogger.Error(utils.CommandNameModel, err)

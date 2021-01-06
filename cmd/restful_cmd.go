@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"gt/libs/libRestful"
-	"gt/libs/libService"
 	"gt/utils"
 	"io"
 )
@@ -18,7 +17,7 @@ func RestfulCommand() *cli.Command {
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "name", Aliases: []string{"n"}, Value: "example"},
 			&cli.StringFlag{Name: "engine", Aliases: []string{"e"}, Value: "gin"},
-			&cli.StringFlag{Name: "output_path", Aliases: []string{"o"}, Value: "./restful/"},
+			&cli.StringFlag{Name: "output_path", Aliases: []string{"o"}, Value: "./restful"},
 		},
 		Action: RestfulCommandAction,
 	}
@@ -35,7 +34,7 @@ func RestfulCommandAction(ctx *cli.Context) error {
 	var fileWriter io.Writer
 
 	// 检查服务接口是否存在，不存在则创建
-	fileName := cmdParams.OutputPath + cmdParams.Name + "_api.go"
+	fileName := cmdParams.OutputPath + "/" + cmdParams.Name + "_api.go"
 	if !IsServiceFileExist(fileName) {
 		if fileWriter, err = utils.CreateFile(fileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameRestful, err)

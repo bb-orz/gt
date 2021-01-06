@@ -22,7 +22,7 @@ func DomainCommand() *cli.Command {
 			&cli.StringFlag{Name: "table", Aliases: []string{"t"}},
 			&cli.StringFlag{Name: "user", Aliases: []string{"u"}, Value: "dev"},
 			&cli.StringFlag{Name: "password", Aliases: []string{"p"}, Value: "123456"},
-			&cli.StringFlag{Name: "output_path", Aliases: []string{"o"}, Value: "./core/"},
+			&cli.StringFlag{Name: "output_path", Aliases: []string{"o"}, Value: "./core"},
 			&cli.StringFlag{Name: "formatter", Aliases: []string{"f"}, Value: "gorm"},
 		},
 		Action: DomainCommandAction,

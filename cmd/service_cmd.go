@@ -18,8 +18,9 @@ func ServiceCommand() *cli.Command {
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "name", Aliases: []string{"n"}, Value: "example"},
 			&cli.StringFlag{Name: "version", Aliases: []string{"v"}, Value: "V1"},
-			&cli.StringFlag{Name: "interface_output_path", Aliases: []string{"o"}, Value: "./services/"},
-			&cli.StringFlag{Name: "implement_output_path", Aliases: []string{"c"}, Value: "./core/"},
+			&cli.StringFlag{Name: "interface_output_path", Aliases: []string{"o"}, Value: "./services"},
+			&cli.StringFlag{Name: "implement_output_path", Aliases: []string{"c"}, Value: "./core"},
+			&cli.StringFlag{Name: "dto_output_path", Aliases: []string{"d"}, Value: "./dtos"},
 		},
 		Action: ServiceCommandAction,
 	}
@@ -32,12 +33,13 @@ func ServiceCommandAction(ctx *cli.Context) error {
 		Version:     ctx.String("version"),
 		IOutputPath: ctx.String("interface_output_path"),
 		MOutputPath: ctx.String("implement_output_path"),
+		DOutputPath: ctx.String("dto_output_path"),
 	}
 
 	var interfaceFile, implementFile io.Writer
 
 	// 检查服务接口是否存在，不存在则创建
-	interfaceFileName := cmdParams.IOutputPath + cmdParams.Name + "_service.go"
+	interfaceFileName := cmdParams.IOutputPath + "/" + cmdParams.Name + "_service.go"
 	if !IsServiceFileExist(interfaceFileName) {
 		if interfaceFile, err = utils.CreateFile(interfaceFileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameService, err)
@@ -57,7 +59,7 @@ func ServiceCommandAction(ctx *cli.Context) error {
 	}
 
 	// 创建实现服务指定版本的文件
-	implementFileName := cmdParams.MOutputPath + cmdParams.Name + "_service_" + cmdParams.Version + ".go"
+	implementFileName := cmdParams.MOutputPath + "/" + cmdParams.Name + "_service_" + cmdParams.Version + ".go"
 	if !IsServiceFileExist(implementFileName) {
 		if implementFile, err = utils.CreateFile(implementFileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameService, err)
@@ -78,7 +80,7 @@ func ServiceCommandAction(ctx *cli.Context) error {
 	}
 
 	// 生成服务数据传输对象
-	dtoFileName := "./dtos/service_" + cmdParams.Name + "_dto.go"
+	dtoFileName := cmdParams.DOutputPath + "/service_" + cmdParams.Name + "_dto.go"
 	if !IsServiceFileExist(dtoFileName) {
 		if implementFile, err = utils.CreateFile(dtoFileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameService, err)

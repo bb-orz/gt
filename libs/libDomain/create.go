@@ -11,9 +11,9 @@ func CreateDomainFile(cmdParams *CmdParams) (domainFile, daoFile, testFile io.Wr
 		domainFileName, daoFileName, testFileName string
 	)
 
-	domainFileName = cmdParams.OutputPath + cmdParams.Name + "/" + cmdParams.Name + "_domain.go"
-	daoFileName = cmdParams.OutputPath + cmdParams.Name + "/" + cmdParams.Name + "_dao.go"
-	testFileName = cmdParams.OutputPath + cmdParams.Name + "/" + cmdParams.Name + "_test.go"
+	domainFileName = cmdParams.OutputPath + "/" + cmdParams.Name + "/" + cmdParams.Name + "_domain.go"
+	daoFileName = cmdParams.OutputPath + "/" + cmdParams.Name + "/" + cmdParams.Name + "_dao.go"
+	testFileName = cmdParams.OutputPath + "/" + cmdParams.Name + "/" + cmdParams.Name + "_test.go"
 
 	if domainFile, err = utils.CreateFile(domainFileName); err != nil {
 		utils.CommandLogger.Error(utils.CommandNameDomain, err)
