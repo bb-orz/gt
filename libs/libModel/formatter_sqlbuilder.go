@@ -7,15 +7,15 @@ import (
 	"text/template"
 )
 
-func NewFormatterSqlBuilderStruct() *FormatterSqlBuilderStruct {
-	return new(FormatterSqlBuilderStruct)
+func NewFormatterSqlBuilder() *FormatterSqlBuilder {
+	return new(FormatterSqlBuilder)
 }
 
-type FormatterSqlBuilderStruct struct {
+type FormatterSqlBuilder struct {
 	FormatterStruct
 }
 
-func (f *FormatterSqlBuilderStruct) Format(tableName string, cols []Column) IFormatter {
+func (f *FormatterSqlBuilder) Format(tableName string, cols []Column) IFormatter {
 	f.PackageName = tableName
 	f.ImportList = make(map[string]ImportItem)
 	f.StructName = utils.CamelString(tableName)
@@ -40,7 +40,7 @@ func (f *FormatterSqlBuilderStruct) Format(tableName string, cols []Column) IFor
 	return f
 }
 
-func (f *FormatterSqlBuilderStruct) WriteOut(writer io.Writer) error {
+func (f *FormatterSqlBuilder) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("SqlBuilderTemplate").Parse(SqlBuilderStructCodeTemplate)).Execute(writer, *f)
 }
 

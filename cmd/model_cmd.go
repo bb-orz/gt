@@ -68,7 +68,7 @@ func ModelCommandAction(ctx *cli.Context) error {
 		}
 
 		// 格式化输出
-		if err = libModel.NewFormatterGormStruct().Format(cmdParams.Table, columns).WriteOut(writer); err != nil {
+		if err = libModel.NewFormatterGorm().Format(cmdParams.Table, columns).WriteOut(writer); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameModel, err)
 			return nil
 		} else {
@@ -86,7 +86,7 @@ func ModelCommandAction(ctx *cli.Context) error {
 		}
 
 		// 格式化输出
-		if err = libModel.NewFormatterSqlBuilderStruct().Format(cmdParams.Table, columns).WriteOut(writer); err != nil {
+		if err = libModel.NewFormatterSqlBuilder().Format(cmdParams.Table, columns).WriteOut(writer); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameModel, err)
 			return nil
 		} else {

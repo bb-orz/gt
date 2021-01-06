@@ -6,15 +6,15 @@ import (
 	"text/template"
 )
 
-type FormatterDomainTestingStruct struct {
+type FormatterDomainTesting struct {
 	FormatterStruct
 }
 
-func NewFormatterDomainTestingStruct() *FormatterDomainTestingStruct {
-	return new(FormatterDomainTestingStruct)
+func NewFormatterDomainTesting() *FormatterDomainTesting {
+	return new(FormatterDomainTesting)
 }
 
-func (f *FormatterDomainTestingStruct) Format(name string) IFormatter {
+func (f *FormatterDomainTesting) Format(name string) IFormatter {
 	f.PackageName = name
 	f.StructName = utils.CamelString(name)
 	f.TableName = name
@@ -25,12 +25,8 @@ func (f *FormatterDomainTestingStruct) Format(name string) IFormatter {
 	return f
 }
 
-func (f *FormatterDomainTestingStruct) WriteOut(writer io.Writer) error {
-	err := template.Must(template.New("DomainTestingTemplate").Parse(DomainTestingCodeTemplate)).Execute(writer, *f)
-	if err != nil {
-		utils.CommandLogger.Error(utils.CommandNameDomain, err)
-	}
-	return nil
+func (f *FormatterDomainTesting) WriteOut(writer io.Writer) error {
+	return template.Must(template.New("DomainTestingTemplate").Parse(DomainTestingCodeTemplate)).Execute(writer, *f)
 }
 
 const DomainTestingCodeTemplate = `

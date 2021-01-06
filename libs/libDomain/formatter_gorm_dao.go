@@ -6,15 +6,15 @@ import (
 	"text/template"
 )
 
-type FormatterDomainGormDaoStruct struct {
+type FormatterDomainGormDao struct {
 	FormatterStruct
 }
 
-func NewFormatterDomainGormDaoStruct() *FormatterDomainGormDaoStruct {
-	return new(FormatterDomainGormDaoStruct)
+func NewFormatterDomainGormDao() *FormatterDomainGormDao {
+	return new(FormatterDomainGormDao)
 }
 
-func (f *FormatterDomainGormDaoStruct) Format(name string) IFormatter {
+func (f *FormatterDomainGormDao) Format(name string) IFormatter {
 	f.PackageName = name
 	f.StructName = utils.CamelString(name)
 	f.TableName = name
@@ -26,7 +26,7 @@ func (f *FormatterDomainGormDaoStruct) Format(name string) IFormatter {
 	return f
 }
 
-func (f *FormatterDomainGormDaoStruct) WriteOut(writer io.Writer) error {
+func (f *FormatterDomainGormDao) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("DomainGormDaoTemplate").Parse(DomainGormDaoCodeTemplate)).Execute(writer, *f)
 }
 

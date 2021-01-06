@@ -6,15 +6,15 @@ import (
 	"text/template"
 )
 
-type FormatterDomainStruct struct {
+type FormatterDomain struct {
 	FormatterStruct
 }
 
-func NewFormatterDomainStruct() *FormatterDomainStruct {
-	return new(FormatterDomainStruct)
+func NewFormatterDomain() *FormatterDomain {
+	return new(FormatterDomain)
 }
 
-func (f *FormatterDomainStruct) Format(name string) IFormatter {
+func (f *FormatterDomain) Format(name string) IFormatter {
 	f.PackageName = name
 	f.StructName = utils.CamelString(name)
 	f.TableName = name
@@ -25,7 +25,7 @@ func (f *FormatterDomainStruct) Format(name string) IFormatter {
 	return f
 }
 
-func (f *FormatterDomainStruct) WriteOut(writer io.Writer) error {
+func (f *FormatterDomain) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("DomainTemplate").Parse(DomainCodeTemplate)).Execute(writer, *f)
 }
 

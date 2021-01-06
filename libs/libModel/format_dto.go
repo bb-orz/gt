@@ -7,18 +7,18 @@ import (
 	"text/template"
 )
 
-func NewFormatterDTOStruct() *FormatterDTOStruct {
-	return new(FormatterDTOStruct)
+func NewFormatterDTOStruct() *FormatterDTO {
+	return new(FormatterDTO)
 }
 
-type FormatterDTOStruct struct {
+type FormatterDTO struct {
 	FormatterStruct
 }
 
-func (f *FormatterDTOStruct) Format(tableName string, cols []Column) IFormatter {
+func (f *FormatterDTO) Format(tableName string, cols []Column) IFormatter {
 	f.PackageName = "dtos"
 	f.ImportList = make(map[string]ImportItem)
-	f.StructName = utils.CamelString(tableName) + "DTO"
+	f.StructName = utils.CamelString(tableName)
 	f.TableName = tableName
 	f.FieldList = make([]Field, len(cols))
 
@@ -47,11 +47,11 @@ func (f *FormatterDTOStruct) Format(tableName string, cols []Column) IFormatter 
 	return f
 }
 
-func (f *FormatterDTOStruct) WriteOut(writer io.Writer) error {
-	return template.Must(template.New("DTOTemplate").Parse(DTOStructCodeTemplate)).Execute(writer, *f)
+func (f *FormatterDTO) WriteOut(writer io.Writer) error {
+	return template.Must(template.New("DTOTemplate").Parse(DTOCodeTemplate)).Execute(writer, *f)
 }
 
-const DTOStructCodeTemplate = `
+const DTOCodeTemplate = `
 package {{ .PackageName }}
 
 import (
@@ -60,8 +60,8 @@ import (
 	{{- end}}
 )
 
-// {{ .StructName }} is a mapping object for {{ .TableName }} table in mysql
-type {{.StructName}} struct {
+// {{ .StructName }}DTO is a mapping object for {{ .TableName }} table in mysql
+type {{.StructName}}DTO struct {
 {{- range .FieldList }}
 	{{ .Name }} {{ .Type }} {{ .StructTag }} 		// {{ .Comment }}
 {{- end}}

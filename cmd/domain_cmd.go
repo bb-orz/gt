@@ -47,14 +47,14 @@ func DomainCommandAction(ctx *cli.Context) error {
 	domainFile, daoFile, testFile, err := libDomain.CreateDomainFile(cmdParams)
 
 	// 写入domain/dao/test格式化代码模板
-	if err = libDomain.NewFormatterDomainStruct().Format(cmdParams.Name).WriteOut(domainFile); err != nil {
+	if err = libDomain.NewFormatterDomain().Format(cmdParams.Name).WriteOut(domainFile); err != nil {
 		utils.CommandLogger.Error(utils.CommandNameDomain, err)
 		return nil
 	} else {
 		utils.CommandLogger.OK(utils.CommandNameDomain, fmt.Sprintf("Write %s Domain File Successful!", cmdParams.Name))
 	}
 
-	if err = libDomain.NewFormatterDomainTestingStruct().Format(cmdParams.Name).WriteOut(testFile); err != nil {
+	if err = libDomain.NewFormatterDomainTesting().Format(cmdParams.Name).WriteOut(testFile); err != nil {
 		utils.CommandLogger.Error(utils.CommandNameDomain, err)
 		return nil
 	} else {
@@ -63,14 +63,14 @@ func DomainCommandAction(ctx *cli.Context) error {
 
 	switch cmdParams.Formatter {
 	case "gorm":
-		if err = libDomain.NewFormatterDomainGormDaoStruct().Format(cmdParams.Name).WriteOut(daoFile); err != nil {
+		if err = libDomain.NewFormatterDomainGormDao().Format(cmdParams.Name).WriteOut(daoFile); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameDomain, err)
 			return nil
 		} else {
 			utils.CommandLogger.OK(utils.CommandNameDomain, fmt.Sprintf("Write %s Domain Gorm Dao File Successful!", cmdParams.Name))
 		}
 	case "sqlbuilder":
-		if err = libDomain.NewFormatterDomainSqlBuilderDaoStruct().Format(cmdParams.Name).WriteOut(daoFile); err != nil {
+		if err = libDomain.NewFormatterDomainSqlBuilderDao().Format(cmdParams.Name).WriteOut(daoFile); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameDomain, err)
 			return nil
 		} else {

@@ -6,15 +6,15 @@ import (
 	"text/template"
 )
 
-type FormatterDomainSqlBuilderDaoStruct struct {
+type FormatterDomainSqlBuilderDao struct {
 	FormatterStruct
 }
 
-func NewFormatterDomainSqlBuilderDaoStruct() *FormatterDomainSqlBuilderDaoStruct {
-	return new(FormatterDomainSqlBuilderDaoStruct)
+func NewFormatterDomainSqlBuilderDao() *FormatterDomainSqlBuilderDao {
+	return new(FormatterDomainSqlBuilderDao)
 }
 
-func (f *FormatterDomainSqlBuilderDaoStruct) Format(name string) IFormatter {
+func (f *FormatterDomainSqlBuilderDao) Format(name string) IFormatter {
 	f.PackageName = name
 	f.StructName = utils.CamelString(name)
 	f.TableName = name
@@ -26,7 +26,7 @@ func (f *FormatterDomainSqlBuilderDaoStruct) Format(name string) IFormatter {
 	return f
 }
 
-func (f *FormatterDomainSqlBuilderDaoStruct) WriteOut(writer io.Writer) error {
+func (f *FormatterDomainSqlBuilderDao) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("DomainSqlBuilderTemplate").Parse(DomainSqlBuilderDaoCodeTemplate)).Execute(writer, *f)
 }
 

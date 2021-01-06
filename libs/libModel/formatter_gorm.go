@@ -7,15 +7,15 @@ import (
 	"text/template"
 )
 
-func NewFormatterGormStruct() *FormatterGormStruct {
-	return new(FormatterGormStruct)
+func NewFormatterGorm() *FormatterGorm {
+	return new(FormatterGorm)
 }
 
-type FormatterGormStruct struct {
+type FormatterGorm struct {
 	FormatterStruct
 }
 
-func (f *FormatterGormStruct) Format(tableName string, cols []Column) IFormatter {
+func (f *FormatterGorm) Format(tableName string, cols []Column) IFormatter {
 	f.PackageName = tableName
 	f.ImportList = make(map[string]ImportItem)
 	f.StructName = utils.CamelString(tableName)
@@ -41,7 +41,7 @@ func (f *FormatterGormStruct) Format(tableName string, cols []Column) IFormatter
 	return f
 }
 
-func (f *FormatterGormStruct) WriteOut(writer io.Writer) error {
+func (f *FormatterGorm) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("GormTemplate").Parse(GormStructCodeTemplate)).Execute(writer, *f)
 }
 
