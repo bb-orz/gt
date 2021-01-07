@@ -19,7 +19,7 @@ func ServiceCommand() *cli.Command {
 			&cli.StringFlag{Name: "name", Aliases: []string{"n"}, Value: "example"},
 			&cli.StringFlag{Name: "version", Aliases: []string{"v"}, Value: "V1"},
 			&cli.StringFlag{Name: "interface_output_path", Aliases: []string{"o"}, Value: "./services"},
-			&cli.StringFlag{Name: "implement_output_path", Aliases: []string{"c"}, Value: "./core"},
+			&cli.StringFlag{Name: "implement_output_path", Aliases: []string{"c"}, Value: "./services"},
 			&cli.StringFlag{Name: "dto_output_path", Aliases: []string{"d"}, Value: "./dtos"},
 		},
 		Action: ServiceCommandAction,
