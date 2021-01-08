@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 	"syscall"
 )
 
@@ -29,6 +30,12 @@ func ExecShellCommand(command string) error {
 	cmd.Stderr = os.Stdout
 	err := cmd.Run()
 	return err
+}
+
+// 获取路径最里目录
+func GetLastPath(p string) string {
+	base := path.Base(p)
+	return base
 }
 
 // 替换项目中的主包名

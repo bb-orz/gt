@@ -26,7 +26,7 @@ func InitCommand() *cli.Command {
 				Name:    "sample",
 				Aliases: []string{"s"},
 				Value:   "sample",
-				Usage:   "[--sample|-s=[sample|account]]",
+				Usage:   "[--sample|-s=[sample|account|grpc|micro]]",
 			},
 			&cli.BoolFlag{
 				Name:    "mod",
@@ -90,6 +90,18 @@ func InitCommandAction(ctx *cli.Context) error {
 			return nil
 		}
 		utils.CommandLogger.OK(utils.CommandNameInit, "git clone account scaffold successful!")
+	case "grpc":
+		if err := libInit.GitCloneGrpc(nameFlag); err != nil {
+			utils.CommandLogger.Error(utils.CommandNameInit, err)
+			return nil
+		}
+		utils.CommandLogger.OK(utils.CommandNameInit, "git clone grpc scaffold successful!")
+	case "micro":
+		if err := libInit.GitCloneMicro(nameFlag); err != nil {
+			utils.CommandLogger.Error(utils.CommandNameInit, err)
+			return nil
+		}
+		utils.CommandLogger.OK(utils.CommandNameInit, "git clone go-micro scaffold successful!")
 	}
 
 	// go mod
