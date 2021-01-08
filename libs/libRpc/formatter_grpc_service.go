@@ -17,6 +17,7 @@ type FormatterGrpcService struct {
 func (f *FormatterGrpcService) Format(cmdParams *CmdParams) IFormatter {
 	f.PackageName = utils.GetLastPath(cmdParams.ServiceOutputPath)
 	f.StructName = utils.CamelString(cmdParams.Name)
+	f.Name = cmdParams.Name
 	f.TypeName = utils.CamelString(cmdParams.Type)
 	f.ImportList = make(map[string]ImportItem)
 	f.ImportList[""] = ImportItem{Alias: "", Package: ""}
@@ -35,7 +36,7 @@ import (
 	{{- end}}
 )
 
-// TODO 请实现 {{ .PackageName }}Pb.{{ .StructName }}{{ .TypeName }}ServiceServer 接口
+// TODO 请实现 {{ .Name }}Pb.{{ .StructName }}{{ .TypeName }}ServiceServer 接口
 type {{ .StructName }}{{ .TypeName }}Service struct{}
 
 `

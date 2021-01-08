@@ -11,6 +11,7 @@ type IFormatter interface {
 type FormatterStruct struct {
 	PackageName string
 	ImportList  map[string]ImportItem
+	Name        string
 	StructName  string
 	TypeName    string
 }

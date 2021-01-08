@@ -16,7 +16,7 @@ func RPCCommand() *cli.Command {
 		Description: "The rpc command create a new rpc service with go struct，this command will generate some necessary files or dir in rpc directory .",
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: "name", Aliases: []string{"n"}, Value: "example"},
-			&cli.StringFlag{Name: "type", Aliases: []string{"t"}, Value: "grpc", Usage: "[-t grpc|micro]"},
+			&cli.StringFlag{Name: "rpc_type", Aliases: []string{"t"}, Value: "grpc", Usage: "[-t grpc|micro]"},
 			&cli.StringFlag{Name: "protobuf_path", Aliases: []string{"p"}, Value: "./protobuf"},
 			&cli.StringFlag{Name: "server_output_path", Aliases: []string{"s"}, Value: "./starter"},
 			&cli.StringFlag{Name: "client_output_path", Aliases: []string{"c"}, Value: "./clients"},
@@ -31,7 +31,7 @@ func RPCCommandAction(ctx *cli.Context) error {
 	var err error
 	var cmdParams = libRpc.CmdParams{
 		Name:               ctx.String("name"),
-		Type:               ctx.String("version"),
+		Type:               ctx.String("rpc_type"),
 		ProtoBufPath:       ctx.String("protobuf_path"),
 		ClientOutputPath:   ctx.String("client_output_path"),
 		ProtoGenOutputPath: ctx.String("proto_gen_output_path"),
@@ -50,7 +50,7 @@ func RPCCommandAction(ctx *cli.Context) error {
 	var serviceFileWriter, serverFileWriter, clientFileWriter io.Writer
 
 	// 创建 rpc service 文件
-	serviceFileName := cmdParams.ServiceOutputPath + "/" + cmdParams.Name + "_" + cmdParams.Type + "service.go"
+	serviceFileName := cmdParams.ServiceOutputPath + "/" + cmdParams.Name + "_" + cmdParams.Type + "_service.go"
 	if !IsServiceFileExist(serviceFileName) {
 		if serviceFileWriter, err = utils.CreateFile(serviceFileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameRpc, err)
@@ -75,12 +75,12 @@ func RPCCommandAction(ctx *cli.Context) error {
 	}
 
 	// 创建 rpc client 文件
-	clientFileName := cmdParams.ClientOutputPath + "/" + cmdParams.Name + "_" + cmdParams.Type + "client.go"
-	if !IsServiceFileExist(serviceFileName) {
+	clientFileName := cmdParams.ClientOutputPath + "/" + cmdParams.Name + "_" + cmdParams.Type + "_client.go"
+	if !IsServiceFileExist(clientFileName) {
 		if clientFileWriter, err = utils.CreateFile(clientFileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameRpc, err)
 		} else {
-			utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Create %s %s Client File Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type), serviceFileName))
+			utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Create %s %s Client File Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type), clientFileName))
 
 			switch cmdParams.Type {
 			case "grpc":
@@ -101,16 +101,16 @@ func RPCCommandAction(ctx *cli.Context) error {
 
 	// 创建 rpc server starter
 	serverFileName := cmdParams.ServerOutputPath + "/" + cmdParams.Name + utils.CamelString(cmdParams.Type) + "/starter.go"
-	if !IsServiceFileExist(serviceFileName) {
+	if !IsServiceFileExist(serverFileName) {
 		if serverFileWriter, err = utils.CreateFile(serverFileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameRpc, err)
 		} else {
-			utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Create %s %s Server Starter File Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type), serviceFileName))
+			utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Create %s %s Server Starter File Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type), serverFileName))
 
 			switch cmdParams.Type {
 			case "grpc":
 				// 格式化写入
-				if err = libRpc.NewFormatterGppcClient().Format(&cmdParams).WriteOut(serverFileWriter); err != nil {
+				if err = libRpc.NewFormatterGrpcServer().Format(&cmdParams).WriteOut(serverFileWriter); err != nil {
 					utils.CommandLogger.Error(utils.CommandNameRpc, err)
 					return nil
 				} else {
@@ -123,5 +123,9 @@ func RPCCommandAction(ctx *cli.Context) error {
 	} else {
 		utils.CommandLogger.Warning(utils.CommandNameRpc, fmt.Sprintf("%s %s Server Starter File Is Exist!", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type)))
 	}
+
+	utils.CommandLogger.Info(utils.CommandNameRpc, fmt.Sprintf("Please implement protobuf service interface in %s", serverFileName))
+	utils.CommandLogger.Info(utils.CommandNameRpc, "Please register starter rpc server in app/register.go")
+
 	return nil
 }
