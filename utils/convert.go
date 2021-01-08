@@ -20,7 +20,6 @@ func SnakeString(s string) string {
 	return strings.ToLower(string(data[:]))
 }
 
-
 // camel string, xx_yy to XxYy
 func CamelString(s string) string {
 	data := make([]byte, 0, len(s))
@@ -45,5 +44,3 @@ func CamelString(s string) string {
 	}
 	return string(data[:])
 }
-
-

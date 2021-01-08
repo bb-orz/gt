@@ -30,6 +30,7 @@ func main() {
 		cmd.DomainCommand(),  // 创建领域模块命令
 		cmd.ServiceCommand(), // 服务创建命令
 		cmd.RestfulCommand(), // Restful API创建命令
+		cmd.RPCCommand(),     // RPC Service 创建命令
 	}
 
 	err := app.Run(os.Args)

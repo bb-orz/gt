@@ -39,7 +39,12 @@ GLOBAL OPTIONS:
 
 #### 2.1 Command Init
 
-init 命令用于初始化应用脚手架，目前有sample/account 两种模板可选
+init 命令用于初始化应用脚手架，目前有sample/account|grpc|micro 四种模板可选
+
+- Sample：https://github.com/bb-orz/goapp-sample 简单的restful应用脚手架
+- Account：https://github.com/bb-orz/goapp-acount 实现基本账户接口的restful应用脚手架
+- Grpc：https://github.com/bb-orz/goapp-grpc 简单的grpc应用脚手架
+- Micro：https://github.com/bb-orz/goapp-micro 简单的go-micro rpc微服务应用脚手架
 
 ```
 NAME:
@@ -53,7 +58,7 @@ DESCRIPTION:
 
 OPTIONS:
   --name value, -n value    [[--name|-n=]ProjectName] (default: "goapp")
-  --sample value, -s value  [--sample|-s=[sample|account]] (default: "sample")
+  --sample value, -s value  [--sample|-s=[sample|account|grpc|micro]] (default: "sample")
   --mod, -m                 [--mod|-m=true|false] (default: true)
   --git, -g                 [--git|-g=true|false] (default: true)
   --help, -h                show help (default: false)

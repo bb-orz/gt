@@ -9,6 +9,8 @@ import (
 
 const SampleGitUrl = "https://github.com/bb-orz/goapp-sample.git"   // 最简模板
 const AccountGitUrl = "https://github.com/bb-orz/goapp-account.git" // 通用账户模板
+const GrpcGitUrl = "https://github.com/bb-orz/goapp-grpc.git"       // grpc 应用
+const MicroGitUrl = "https://github.com/bb-orz/goapp-micro.git"     // go-micro 应用
 
 func GitCloneSample(appName string) error {
 	shellCmd := "`git clone -b master --single-branch --depth 1 " + SampleGitUrl + " " + appName + "`"
@@ -18,6 +20,18 @@ func GitCloneSample(appName string) error {
 
 func GitCloneAccount(appName string) error {
 	shellCmd := "`git clone -b master --single-branch --depth 1 " + AccountGitUrl + " " + appName + "`"
+	err := utils.ExecShellCommand(shellCmd)
+	return err
+}
+
+func GitCloneGrpc(appName string) error {
+	shellCmd := "`git clone -b master --single-branch --depth 1 " + GrpcGitUrl + " " + appName + "`"
+	err := utils.ExecShellCommand(shellCmd)
+	return err
+}
+
+func GitCloneMicro(appName string) error {
+	shellCmd := "`git clone -b master --single-branch --depth 1 " + MicroGitUrl + " " + appName + "`"
 	err := utils.ExecShellCommand(shellCmd)
 	return err
 }
