@@ -5,8 +5,8 @@ import (
 	"text/template"
 )
 
-func NewFormatterStarterX() *FormatterStarter {
-	return new(FormatterStarter)
+func NewFormatterStarterX() *FormatterStarterX {
+	return new(FormatterStarterX)
 }
 
 type FormatterStarterX struct {

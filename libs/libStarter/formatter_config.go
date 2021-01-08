@@ -5,8 +5,8 @@ import (
 	"text/template"
 )
 
-func NewFormatterStarterConfig() *FormatterStarter {
-	return new(FormatterStarter)
+func NewFormatterStarterConfig() *FormatterStarterConfig {
+	return new(FormatterStarterConfig)
 }
 
 type FormatterStarterConfig struct {

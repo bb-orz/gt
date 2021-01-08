@@ -20,6 +20,7 @@ func (f *FormatterStarterTesting) Format(cmdParams *CmdParams) IFormatter {
 	f.Name = cmdParams.Name
 	f.ImportList = make(map[string]ImportItem)
 	f.ImportList["convey"] = ImportItem{Alias: ".", Package: "github.com/smartystreets/goconvey/convey"}
+	f.ImportList["goinfras"] = ImportItem{Alias: "", Package: "github.com/bb-orz/goinfras"}
 	f.ImportList["testing"] = ImportItem{Alias: "", Package: "testing"}
 	return f
 }

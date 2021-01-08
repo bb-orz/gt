@@ -10,7 +10,7 @@ import (
 
 func StarterCommand() *cli.Command {
 	return &cli.Command{
-		Name:        "rpc",
+		Name:        "starter",
 		Usage:       "Add Goinfras Starter",
 		UsageText:   "gt starter [--name|-n=][StarterName]",
 		Description: "The starter command create a new starter base on goinfras ，this command will generate some necessary files or dir in starter directory .",
@@ -101,7 +101,7 @@ func StarterCommandAction(ctx *cli.Context) error {
 	}
 
 	// 创建 starter x 文件
-	xFileName = cmdParams.OutputPath + "/" + cmdParams.Name + "/run_test.go"
+	xFileName = cmdParams.OutputPath + "/" + cmdParams.Name + "/x.go"
 	if !IsServiceFileExist(xFileName) {
 		if xFileWriter, err = utils.CreateFile(xFileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameStarter, err)
