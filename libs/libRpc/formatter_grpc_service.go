@@ -20,7 +20,6 @@ func (f *FormatterGrpcService) Format(cmdParams *CmdParams) IFormatter {
 	f.Name = cmdParams.Name
 	f.TypeName = utils.CamelString(cmdParams.Type)
 	f.ImportList = make(map[string]ImportItem)
-	f.ImportList[""] = ImportItem{Alias: "", Package: ""}
 	return f
 }
 

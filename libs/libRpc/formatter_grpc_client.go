@@ -6,7 +6,7 @@ import (
 	"text/template"
 )
 
-func NewFormatterGppcClient() *FormatterGrpcClient {
+func NewFormatterGrpcClient() *FormatterGrpcClient {
 	return new(FormatterGrpcClient)
 }
 

@@ -40,7 +40,14 @@ func RPCCommandAction(ctx *cli.Context) error {
 	}
 
 	// Gen protobuf go file
-	shellCmd := "cd " + cmdParams.ProtoBufPath + " && protoc --proto_path= --go_out=plugins=grpc:. ./" + cmdParams.Name + "_grpc.proto"
+	var shellCmd string
+	switch cmdParams.Type {
+	case "grpc":
+		shellCmd = "cd " + cmdParams.ProtoBufPath + " && protoc --proto_path= --go_out=plugins=grpc:. ./" + cmdParams.Name + "_" + cmdParams.Type + ".proto"
+	case "micro":
+		shellCmd = "cd " + cmdParams.ProtoBufPath + " && protoc --proto_path= --micro_out=. --go_out=. ./" + cmdParams.Name + "_" + cmdParams.Type + ".proto"
+	}
+
 	if err = utils.ExecShellCommand(shellCmd); err != nil {
 		utils.CommandLogger.Error(utils.CommandNameRpc, err)
 		return nil
@@ -67,6 +74,13 @@ func RPCCommandAction(ctx *cli.Context) error {
 					utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Write %s %s Service File Successful!", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type)))
 				}
 			case "micro":
+				// 格式化写入
+				if err = libRpc.NewFormatterMicroService().Format(&cmdParams).WriteOut(serviceFileWriter); err != nil {
+					utils.CommandLogger.Error(utils.CommandNameRpc, err)
+					return nil
+				} else {
+					utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Write %s %s Service File Successful!", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type)))
+				}
 
 			}
 		}
@@ -85,14 +99,19 @@ func RPCCommandAction(ctx *cli.Context) error {
 			switch cmdParams.Type {
 			case "grpc":
 				// 格式化写入
-				if err = libRpc.NewFormatterGppcClient().Format(&cmdParams).WriteOut(clientFileWriter); err != nil {
+				if err = libRpc.NewFormatterGrpcClient().Format(&cmdParams).WriteOut(clientFileWriter); err != nil {
 					utils.CommandLogger.Error(utils.CommandNameRpc, err)
 					return nil
 				} else {
 					utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Write %s %s Client File Successful!", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type)))
 				}
 			case "micro":
-
+				if err = libRpc.NewFormatterMicroClient().Format(&cmdParams).WriteOut(clientFileWriter); err != nil {
+					utils.CommandLogger.Error(utils.CommandNameRpc, err)
+					return nil
+				} else {
+					utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Write %s %s Client File Successful!", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type)))
+				}
 			}
 		}
 	} else {
@@ -117,7 +136,13 @@ func RPCCommandAction(ctx *cli.Context) error {
 					utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Write %s %s Server Starter File Successful!", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type)))
 				}
 			case "micro":
-
+				// 格式化写入
+				if err = libRpc.NewFormatterMicroServer().Format(&cmdParams).WriteOut(serverFileWriter); err != nil {
+					utils.CommandLogger.Error(utils.CommandNameRpc, err)
+					return nil
+				} else {
+					utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Write %s %s Server Starter File Successful!", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type)))
+				}
 			}
 		}
 	} else {
