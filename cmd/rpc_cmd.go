@@ -53,14 +53,16 @@ func RPCCommandAction(ctx *cli.Context) error {
 		return nil
 	}
 
-	// create service server client file
+	// create service,server,client file
 	var serviceFileWriter, serverFileWriter, clientFileWriter io.Writer
+	var serviceFileName, serverFileName, clientFileName string
 
 	// 创建 rpc service 文件
-	serviceFileName := cmdParams.ServiceOutputPath + "/" + cmdParams.Name + "_" + cmdParams.Type + "_service.go"
+	serviceFileName = cmdParams.ServiceOutputPath + "/" + cmdParams.Name + "_" + cmdParams.Type + "_service.go"
 	if !IsServiceFileExist(serviceFileName) {
 		if serviceFileWriter, err = utils.CreateFile(serviceFileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameRpc, err)
+			return nil
 		} else {
 			utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Create %s %s Service File Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type), serviceFileName))
 
@@ -89,10 +91,11 @@ func RPCCommandAction(ctx *cli.Context) error {
 	}
 
 	// 创建 rpc client 文件
-	clientFileName := cmdParams.ClientOutputPath + "/" + cmdParams.Name + "_" + cmdParams.Type + "_client.go"
+	clientFileName = cmdParams.ClientOutputPath + "/" + cmdParams.Name + "_" + cmdParams.Type + "_client.go"
 	if !IsServiceFileExist(clientFileName) {
 		if clientFileWriter, err = utils.CreateFile(clientFileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameRpc, err)
+			return nil
 		} else {
 			utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Create %s %s Client File Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type), clientFileName))
 
@@ -119,10 +122,11 @@ func RPCCommandAction(ctx *cli.Context) error {
 	}
 
 	// 创建 rpc server starter
-	serverFileName := cmdParams.ServerOutputPath + "/" + cmdParams.Name + utils.CamelString(cmdParams.Type) + "/starter.go"
+	serverFileName = cmdParams.ServerOutputPath + "/" + cmdParams.Name + utils.CamelString(cmdParams.Type) + "/starter.go"
 	if !IsServiceFileExist(serverFileName) {
 		if serverFileWriter, err = utils.CreateFile(serverFileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameRpc, err)
+			return nil
 		} else {
 			utils.CommandLogger.OK(utils.CommandNameRpc, fmt.Sprintf("Create %s %s Server Starter File Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Name), utils.CamelString(cmdParams.Type), serverFileName))
 

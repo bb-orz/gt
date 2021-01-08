@@ -14,6 +14,7 @@ const (
 	CommandNameService = "Service"
 	CommandNameRestful = "Restful"
 	CommandNameRpc     = "RPC"
+	CommandNameStarter = "Starter"
 )
 
 // 日志等级命名常量
@@ -75,6 +76,8 @@ func (p *LogFormatterParams) CommandColor() string {
 		return red
 	case CommandNameRpc:
 		return magenta
+	case CommandNameStarter:
+		return white
 	default:
 		return white
 	}
