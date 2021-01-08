@@ -142,5 +142,8 @@ func StarterCommandAction(ctx *cli.Context) error {
 		return nil
 	}
 
+	utils.CommandLogger.Info(utils.CommandNameStarter, fmt.Sprintf("Please implement %s starter ...", cmdParams.Name))
+	utils.CommandLogger.Info(utils.CommandNameStarter, "Please register starter in app/register.go")
+
 	return nil
 }

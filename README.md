@@ -21,7 +21,7 @@ USAGE:
    gt [option] [command] [args]
 
 VERSION:
-   1.0.0
+   2.0.0
 
 COMMANDS:
    init     Go Web Application Initialization
@@ -29,6 +29,8 @@ COMMANDS:
    domain   Add core domain in project
    service  Add Application Service
    restful  Add Restful API
+   rpc      Add RPC Service
+   starter  Add Goinfras Starter
    help, h  Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
@@ -165,4 +167,49 @@ OPTIONS:
    --help, -h                     show help (default: false)
    
 
+```
+
+#### 2.6 Command RPC
+rpc 命令用于创建 rpc 服务代码，如果您创建的应用脚手架模板为 goapp-grpc 或 goapp-micro, 您会常用到这个命令
+
+
+```
+NAME:
+   gt rpc - Add RPC Service
+
+USAGE:
+   gt rpc [--name|-n=][RPCName]
+
+DESCRIPTION:
+   The rpc command create a new rpc service with go struct，this command will generate some necessary files or dir in rpc directory .
+
+OPTIONS:
+   --name value, -n value                   (default: "example")
+   --rpc_type value, -t value               [-t grpc|micro] (default: "grpc")
+   --protobuf_path value, -p value          (default: "./protobuf")
+   --server_output_path value, -s value     (default: "./starter")
+   --client_output_path value, -c value     (default: "./clients")
+   --proto_gen_output_path value, -P value  (default: "./protobuf")
+   --service_output_path value, -S value    (default: "./services")
+   --help, -h                               show help (default: false)
+```
+
+
+#### 2.7 Command Starter
+starter 命令用于创建自定义启动器，该命令会生成 starter 代码模板
+
+```
+NAME:
+   gt starter - Add Goinfras Starter
+
+USAGE:
+   gt starter [--name|-n=][StarterName]
+
+DESCRIPTION:
+   The starter command create a new starter base on goinfras ，this command will generate some necessary files or dir in starter directory.
+
+OPTIONS:
+   --name value, -n value         (default: "example")
+   --output_path value, -o value  (default: "./starter")
+   --help, -h                     show help (default: false)
 ```
