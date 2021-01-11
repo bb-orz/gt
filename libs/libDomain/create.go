@@ -2,7 +2,7 @@ package libDomain
 
 import (
 	"fmt"
-	"gt/utils"
+	"github.com/bb-orz/gt/utils"
 	"io"
 )
 

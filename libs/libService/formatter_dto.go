@@ -2,7 +2,7 @@ package libService
 
 import (
 	"fmt"
-	"gt/utils"
+	"github.com/bb-orz/gt/utils"
 	"io"
 	"text/template"
 )

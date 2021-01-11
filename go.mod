@@ -1,4 +1,4 @@
-module gt
+module github.com/bb-orz/gt
 
 go 1.15
 

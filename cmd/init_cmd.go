@@ -3,9 +3,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"github.com/bb-orz/gt/libs/libInit"
+	"github.com/bb-orz/gt/utils"
 	"github.com/urfave/cli/v2"
-	"gt/libs/libInit"
-	"gt/utils"
 	"os"
 )
 

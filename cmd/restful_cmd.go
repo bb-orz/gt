@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/bb-orz/gt/libs/libRestful"
+	"github.com/bb-orz/gt/utils"
 	"github.com/urfave/cli/v2"
-	"gt/libs/libRestful"
-	"gt/utils"
 	"io"
 )
 

@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/bb-orz/gt/libs/libService"
+	"github.com/bb-orz/gt/utils"
 	"github.com/urfave/cli/v2"
-	"gt/libs/libService"
-	"gt/utils"
 	"io"
 	"os"
 )

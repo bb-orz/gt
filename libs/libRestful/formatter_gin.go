@@ -1,7 +1,7 @@
 package libRestful
 
 import (
-	"gt/utils"
+	"github.com/bb-orz/gt/utils"
 	"io"
 	"text/template"
 )
