@@ -7,6 +7,6 @@ require (
 	github.com/didi/gendry v1.6.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/stretchr/testify v1.5.1 // indirect
 	github.com/urfave/cli/v2 v2.3.0
-	google.golang.org/grpc v1.34.0 // indirect
 )
