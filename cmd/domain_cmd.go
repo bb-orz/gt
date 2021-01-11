@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/bb-orz/gt/libs/libDomain"
+	"github.com/bb-orz/gt/utils"
 	"github.com/urfave/cli/v2"
-	"gt/libs/libDomain"
-	"gt/utils"
 )
 
 func DomainCommand() *cli.Command {

@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/bb-orz/gt/cmd"
+	"github.com/bb-orz/gt/utils"
 	"github.com/urfave/cli/v2"
-	"gt/cmd"
-	"gt/utils"
 	"os"
 	"time"
 )

@@ -1,7 +1,7 @@
 package libInit
 
 import (
-	"gt/utils"
+	"github.com/bb-orz/gt/utils"
 	"runtime"
 	"strconv"
 	"strings"

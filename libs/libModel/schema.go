@@ -2,9 +2,9 @@ package libModel
 
 import (
 	"database/sql"
+	"github.com/bb-orz/gt/utils"
 	"github.com/didi/gendry/builder"
 	"github.com/didi/gendry/scanner"
-	"gt/utils"
 )
 
 const (
