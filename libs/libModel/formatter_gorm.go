@@ -15,11 +15,11 @@ type FormatterGorm struct {
 	FormatterStruct
 }
 
-func (f *FormatterGorm) Format(tableName string, cols []Column) IFormatter {
-	f.PackageName = tableName
+func (f *FormatterGorm) Format(table string, cols []Column) IFormatter {
+	f.PackageName = table
 	f.ImportList = make(map[string]ImportItem)
-	f.StructName = utils.CamelString(tableName)
-	f.TableName = tableName
+	f.StructName = utils.CamelString(table)
+	f.TableName = table
 	f.FieldList = make([]Field, len(cols))
 
 	for idx, col := range cols {

@@ -5,6 +5,7 @@ import (
 	"github.com/bb-orz/gt/libs/libDomain"
 	"github.com/bb-orz/gt/utils"
 	"github.com/urfave/cli/v2"
+	"io"
 )
 
 func DomainCommand() *cli.Command {
@@ -46,38 +47,42 @@ func DomainCommandAction(ctx *cli.Context) error {
 		Formatter:   ctx.String("formatter"),
 	}
 
-	domainFile, daoFile, testFile, err := libDomain.CreateDomainFile(cmdParams)
+	var err error
+	var domainFileName, testFileName string
+	var domainFile, testFile io.Writer
 
-	// 写入domain/dao/test格式化代码模板
-	if err = libDomain.NewFormatterDomain().Format(cmdParams.Name).WriteOut(domainFile); err != nil {
+	// 生成Damain 文件
+	domainFileName = cmdParams.OutputPath + "/" + cmdParams.Name + "/" + cmdParams.Name + "_domain.go"
+	if domainFile, err = utils.CreateFile(domainFileName); err != nil {
 		utils.CommandLogger.Error(utils.CommandNameDomain, err)
 		return nil
 	} else {
-		utils.CommandLogger.OK(utils.CommandNameDomain, fmt.Sprintf("Write %s Domain File Successful!", cmdParams.Name))
+		utils.CommandLogger.OK(utils.CommandNameDomain, fmt.Sprintf("Create %s Domain File Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Table), domainFileName))
+
+		// 写入格式化代码模板
+		if err = libDomain.NewFormatterDomain().Format(cmdParams.Name).WriteOut(domainFile); err != nil {
+			utils.CommandLogger.Error(utils.CommandNameDomain, err)
+			return nil
+		} else {
+			utils.CommandLogger.OK(utils.CommandNameDomain, fmt.Sprintf("Write %s Domain File Successful!", cmdParams.Name))
+		}
 	}
 
-	if err = libDomain.NewFormatterDomainTesting().Format(cmdParams.Name).WriteOut(testFile); err != nil {
+	// 生Test文件
+	testFileName = cmdParams.OutputPath + "/" + cmdParams.Name + "/" + cmdParams.Name + "_test.go"
+	if testFile, err = utils.CreateFile(testFileName); err != nil {
 		utils.CommandLogger.Error(utils.CommandNameDomain, err)
 		return nil
 	} else {
-		utils.CommandLogger.OK(utils.CommandNameDomain, fmt.Sprintf("Write %s Domain Testing File Successful!", cmdParams.Name))
-	}
+		utils.CommandLogger.OK(utils.CommandNameDomain, fmt.Sprintf("Create %s Domain Test File Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Table), testFileName))
 
-	switch cmdParams.Formatter {
-	case "gorm":
-		if err = libDomain.NewFormatterDomainGormDao().Format(cmdParams.Name).WriteOut(daoFile); err != nil {
+		if err = libDomain.NewFormatterDomainTesting().Format(cmdParams.Name).WriteOut(testFile); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameDomain, err)
 			return nil
 		} else {
-			utils.CommandLogger.OK(utils.CommandNameDomain, fmt.Sprintf("Write %s Domain Gorm Dao File Successful!", cmdParams.Name))
+			utils.CommandLogger.OK(utils.CommandNameDomain, fmt.Sprintf("Write %s Domain Testing File Successful!", cmdParams.Name))
 		}
-	case "sqlbuilder":
-		if err = libDomain.NewFormatterDomainSqlBuilderDao().Format(cmdParams.Name).WriteOut(daoFile); err != nil {
-			utils.CommandLogger.Error(utils.CommandNameDomain, err)
-			return nil
-		} else {
-			utils.CommandLogger.OK(utils.CommandNameDomain, fmt.Sprintf("Write %s Domain SqlBuilder Dao File Successful!", cmdParams.Name))
-		}
+
 	}
 
 	// 如有传递数据库连接参数，生成相应的model文件及常用的curd dao代码
