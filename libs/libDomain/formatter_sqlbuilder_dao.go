@@ -50,7 +50,7 @@ func New{{ .StructName }}DAO() *{{ .StructName }}DAO {
 	return dao
 }
 
-func (d *{{ .StructName }}DAO) isExist(where *{{ .StructName }}) (bool, error) {
+func (d *{{ .StructName }}DAO) isExist(where *{{ .StructName }}Model) (bool, error) {
 	
 	return false, nil
 }

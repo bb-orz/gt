@@ -54,24 +54,24 @@ import (
 
 const {{ .StructName }}TableName = "{{ .TableName }}"
 
-// {{ .StructName }} is a mapping object for {{ .TableName }} table in mysql
-type {{.StructName}} struct {
+// {{ .StructName }}Model is a mapping object for {{ .TableName }} table in mysql
+type {{.StructName}}Model struct {
 {{- range .FieldList }}
 	{{ .Name }} {{ .Type }} {{ .StructTag }}
 {{- end}}
 }
 
-func New{{.StructName}}() *{{.StructName}} {
-	return new({{.StructName}})
+func New{{.StructName}}Model() *{{.StructName}}Model {
+	return new({{.StructName}}Model)
 }
 
-func (*{{ .StructName }}) TableName() string {
+func (*{{ .StructName }}Model) TableName() string {
 	return {{ .StructName }}TableName	 	// {{ .Comment }}
 }
 
 
 // To DTO
-func (m *{{ .StructName }}) ToDTO() *dtos.{{ .StructName }}DTO {
+func (m *{{ .StructName }}Model) ToDTO() *dtos.{{ .StructName }}DTO {
 	return &dtos.{{ .StructName }}DTO{
 		{{- range .FieldList }}
 			{{ .Name }} : m.{{ .Name }},
@@ -80,7 +80,7 @@ func (m *{{ .StructName }}) ToDTO() *dtos.{{ .StructName }}DTO {
 }
 
 // From DTO
-func (m *{{ .StructName }}) FromDTO(dto *dtos.{{ .StructName }}DTO) {
+func (m *{{ .StructName }}Model) FromDTO(dto *dtos.{{ .StructName }}DTO) {
 	{{- range .FieldList }}
 		m.{{ .Name }} = dto.{{ .Name }}
 	{{- end}}
