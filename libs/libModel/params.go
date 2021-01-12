@@ -2,6 +2,7 @@ package libModel
 
 /*命令参数*/
 type CmdParams struct {
+	Name        string `json:"name"`
 	Driver      string `json:"driver"`
 	Host        string `json:"host"`
 	Port        int    `json:"port"`

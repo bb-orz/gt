@@ -3,7 +3,7 @@ package libModel
 import "io"
 
 type IFormatter interface {
-	Format(tableName string, cols []Column) IFormatter
+	Format(table string, cols []Column) IFormatter
 	WriteOut(writer io.Writer) error
 }
 

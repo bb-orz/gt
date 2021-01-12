@@ -13,6 +13,7 @@ func ModelCommand() *cli.Command {
 		Usage:       "Add core model",
 		Description: "The model command create a new core model with go struct，this command will generate some necessary files or dir in core directory .",
 		Flags: []cli.Flag{
+			&cli.StringFlag{Name: "name", Aliases: []string{"n"}},
 			&cli.StringFlag{Name: "driver", Aliases: []string{"D"}, Value: "mysql"},
 			&cli.StringFlag{Name: "host", Aliases: []string{"H"}, Value: "localhost"},
 			&cli.IntFlag{Name: "port", Aliases: []string{"P"}, Value: 3306},
@@ -30,6 +31,7 @@ func ModelCommand() *cli.Command {
 
 func ModelCommandAction(ctx *cli.Context) error {
 	cmdParams := &libModel.CmdParams{
+		Name:        ctx.String("name"),
 		Driver:      ctx.String("driver"),
 		Host:        ctx.String("host"),
 		Port:        ctx.Int("port"),
@@ -40,6 +42,10 @@ func ModelCommandAction(ctx *cli.Context) error {
 		OutputPath:  ctx.String("output_path"),
 		DOutputPath: ctx.String("dto_output_path"),
 		Formatter:   ctx.String("formatter"),
+	}
+
+	if cmdParams.Name == "" {
+		cmdParams.Name = cmdParams.Table
 	}
 
 	// 获取db连接实例
@@ -60,7 +66,7 @@ func ModelCommandAction(ctx *cli.Context) error {
 	switch cmdParams.Formatter {
 	case "gorm":
 		// 创建输出文件
-		fileName := cmdParams.OutputPath + "/" + cmdParams.Table + "/" + cmdParams.Table + "_model.go"
+		fileName := cmdParams.OutputPath + "/" + cmdParams.Name + "/" + cmdParams.Table + "_model.go"
 		writer, err := utils.CreateFile(fileName)
 		if err != nil {
 			utils.CommandLogger.Error(utils.CommandNameModel, err)
@@ -78,7 +84,7 @@ func ModelCommandAction(ctx *cli.Context) error {
 		}
 	case "sqlbuilder":
 		// 创建输出文件
-		fileName := cmdParams.OutputPath + "/" + cmdParams.Table + "/" + cmdParams.Table + "_model.go"
+		fileName := cmdParams.OutputPath + "/" + cmdParams.Name + "/" + cmdParams.Table + "_model.go"
 		writer, err := utils.CreateFile(fileName)
 		if err != nil {
 			utils.CommandLogger.Error(utils.CommandNameModel, err)
@@ -93,6 +99,32 @@ func ModelCommandAction(ctx *cli.Context) error {
 			return nil
 		} else {
 			utils.CommandLogger.OK(utils.CommandNameModel, "Write SqlBuilder %s Model Successful!")
+		}
+	}
+
+	// 生成Model相关DAO
+	daoFileName := cmdParams.OutputPath + "/" + cmdParams.Name + "/" + cmdParams.Table + "_dao.go"
+	if daoWriter, err := utils.CreateFile(daoFileName); err != nil {
+		utils.CommandLogger.Error(utils.CommandNameModel, err)
+		return nil
+	} else {
+		utils.CommandLogger.OK(utils.CommandNameModel, fmt.Sprintf("Create %s Model Dao File Successful! >>> FilePath：%s", utils.CamelString(cmdParams.Table), daoFileName))
+
+		switch cmdParams.Formatter {
+		case "gorm":
+			if err = libModel.NewFormatterGormDao().Format(cmdParams.Table, nil).WriteOut(daoWriter); err != nil {
+				utils.CommandLogger.Error(utils.CommandNameModel, err)
+				return nil
+			} else {
+				utils.CommandLogger.OK(utils.CommandNameModel, fmt.Sprintf("Write %s GORM Dao File Successful!", utils.CamelString(cmdParams.Table)))
+			}
+		case "sqlbuilder":
+			if err = libModel.NewFormatterSqlBuilderDao().Format(cmdParams.Table, nil).WriteOut(daoWriter); err != nil {
+				utils.CommandLogger.Error(utils.CommandNameModel, err)
+				return nil
+			} else {
+				utils.CommandLogger.OK(utils.CommandNameModel, fmt.Sprintf("Write %s SqlBuilder Dao File Successful!", utils.CamelString(cmdParams.Table)))
+			}
 		}
 	}
 

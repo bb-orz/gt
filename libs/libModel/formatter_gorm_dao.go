@@ -1,4 +1,4 @@
-package libDomain
+package libModel
 
 import (
 	"github.com/bb-orz/gt/utils"
@@ -6,18 +6,18 @@ import (
 	"text/template"
 )
 
-type FormatterDomainGormDao struct {
+type FormatterGormDao struct {
 	FormatterStruct
 }
 
-func NewFormatterDomainGormDao() *FormatterDomainGormDao {
-	return new(FormatterDomainGormDao)
+func NewFormatterGormDao() *FormatterGormDao {
+	return new(FormatterGormDao)
 }
 
-func (f *FormatterDomainGormDao) Format(name string) IFormatter {
-	f.PackageName = name
-	f.StructName = utils.CamelString(name)
-	f.TableName = name
+func (f *FormatterGormDao) Format(table string, cols []Column) IFormatter {
+	f.PackageName = table
+	f.StructName = utils.CamelString(table)
+	f.TableName = table
 	f.ImportList = make(map[string]ImportItem)
 	f.ImportList["dtos"] = ImportItem{Alias: "", Package: "goapp/dtos"}
 	f.ImportList["xgorm"] = ImportItem{Alias: "", Package: "github.com/bb-orz/goinfras/XStore/XGorm"}
@@ -26,7 +26,7 @@ func (f *FormatterDomainGormDao) Format(name string) IFormatter {
 	return f
 }
 
-func (f *FormatterDomainGormDao) WriteOut(writer io.Writer) error {
+func (f *FormatterGormDao) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("DomainGormDaoTemplate").Parse(DomainGormDaoCodeTemplate)).Execute(writer, *f)
 }
 
