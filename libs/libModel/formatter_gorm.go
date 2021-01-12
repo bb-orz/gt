@@ -82,7 +82,7 @@ func (m *{{ .StructName }}Model) ToDTO() *dtos.{{ .StructName }}DTO {
 }
 
 // From DTO
-func (m *{{ .StructName }}) FromDTO(dto *dtos.{{ .StructName }}DTO) {
+func (m *{{ .StructName }}Model) FromDTO(dto *dtos.{{ .StructName }}DTO) {
 	{{- range .FieldList }}
 		m.{{ .Name }} = dto.{{ .Name }}
 	{{- end}}
