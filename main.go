@@ -12,7 +12,7 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = "gt"
-	app.Version = "2.0.0"
+	app.Version = "2.0"
 	app.Compiled = time.Now()
 	app.Usage = "A generation tool of go app scaffold which base on bb-orz/goinfras."
 	app.UsageText = "gt [option] [command] [args]"

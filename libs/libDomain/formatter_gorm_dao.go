@@ -50,10 +50,10 @@ func New{{ .StructName }}DAO() *{{ .StructName }}DAO {
 	return dao
 }
 
-func (d *{{ .StructName }}DAO) isExist(where *{{ .StructName }}) (bool, error) {
+func (d *{{ .StructName }}DAO) isExist(where *{{ .StructName }}Model) (bool, error) {
 	var err error
 	var count int64
-	err = XGorm.XDB().Where(where).First(&{{ .StructName }}{}).Count(&count).Error
+	err = XGorm.XDB().Where(where).First(&{{ .StructName }}Model{}).Count(&count).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			// 无记录
@@ -72,14 +72,14 @@ func (d *{{ .StructName }}DAO) isExist(where *{{ .StructName }}) (bool, error) {
 
 // 查找id是否存在
 func (d *{{ .StructName }}DAO) IsIdExist(id uint) (bool, error) {
-	return d.isExist(&{{ .StructName }}{Id: id})
+	return d.isExist(&{{ .StructName }}Model{Id: id})
 }
 
 
 // 通过Id查找
 func (d *{{ .StructName }}DAO) GetById(id uint) (*dtos.{{ .StructName }}DTO, error) {
 	var err error
-	var {{ .TableName }}Result {{ .StructName }}
+	var {{ .TableName }}Result {{ .StructName }}Model
 	err = XGorm.XDB().Where(id).First(&{{ .TableName }}Result).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -99,7 +99,7 @@ func (d *{{ .StructName }}DAO) GetById(id uint) (*dtos.{{ .StructName }}DTO, err
 func (d *{{ .StructName }}DAO) Create(dto *dtos.{{ .StructName }}DTO) (*dtos.{{ .StructName }}DTO, error) {
 	var err error
 	var {{ .TableName }}DTO *dtos.{{ .StructName }}DTO
-	var {{ .TableName }}Model {{ .StructName }}
+	var {{ .TableName }}Model {{ .StructName }}Model
 
 	{{ .TableName }}Model.FromDTO(dto)
 	if err = XGorm.XDB().Create(&{{ .TableName }}Model).Error; err != nil {
@@ -114,7 +114,7 @@ func (d *{{ .StructName }}DAO) Create(dto *dtos.{{ .StructName }}DTO) (*dtos.{{ 
 // 设置单个信息字段
 func (d *{{ .StructName }}DAO) Set{{ .StructName }}(id uint, field string, value interface{}) error {
 	var err error
-	if err = XGorm.XDB().Model(&{{ .StructName }}{}).Where("id", id).Update(field, value).Error; err != nil {
+	if err = XGorm.XDB().Model(&{{ .StructName }}Model{}).Where("id", id).Update(field, value).Error; err != nil {
 		return err
 	}
 	return nil
@@ -124,7 +124,7 @@ func (d *{{ .StructName }}DAO) Set{{ .StructName }}(id uint, field string, value
 func (d *{{ .StructName }}DAO) Update{{ .StructName }}(id uint, dto dtos.{{ .StructName }}DTO) error {
 	var err error
 
-	if err = XGorm.XDB().Model(&{{ .StructName }}{}).Where("id", id).Updates(&dto).Error; err != nil {
+	if err = XGorm.XDB().Model(&{{ .StructName }}Model{}).Where("id", id).Updates(&dto).Error; err != nil {
 		return err
 	}
 	return nil
@@ -133,7 +133,7 @@ func (d *{{ .StructName }}DAO) Update{{ .StructName }}(id uint, dto dtos.{{ .Str
 // 真删除
 func (d *{{ .StructName }}DAO) DeleteById(id uint) error {
 	var err error
-	if err = XGorm.XDB().Model(&{{ .StructName }}{}).Delete(id).Error; err != nil {
+	if err = XGorm.XDB().Model(&{{ .StructName }}Model{}).Delete(id).Error; err != nil {
 		return err
 	}
 	return nil
@@ -142,7 +142,7 @@ func (d *{{ .StructName }}DAO) DeleteById(id uint) error {
 // 伪删除
 func (d *{{ .StructName }}DAO) SetDeletedAtById(id uint) error {
 	var err error
-	if err = XGorm.XDB().Set("gorm:delete_option", "OPTION (OPTIMIZE FOR UNKNOWN)").Delete(id).Error; err != nil {
+	if err = XGorm.XDB().Model(&{{ .StructName }}Model{}).Set("gorm:delete_option", "OPTION (OPTIMIZE FOR UNKNOWN)").Delete(id).Error; err != nil {
 		return err
 	}
 	return nil
