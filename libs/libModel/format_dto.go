@@ -29,6 +29,7 @@ func (f *FormatterDTO) Format(tableName string, cols []Column) IFormatter {
 		}
 		if colType == CTypeTime {
 			f.ImportList["time"] = ImportItem{Alias: "", Package: "time"}
+			f.ImportList["validate"] = ImportItem{Alias: "", Package: "github.com/bb-orz/goinfras/XValidate"}
 		}
 
 		dtoType, err := col.GetDTOType()
@@ -64,6 +65,10 @@ type {{.StructName}}DTO struct {
 {{- range .FieldList }}
 	{{ .Name }} {{ .Type }} {{ .StructTag }} 		// {{ .Comment }}
 {{- end}}
+}
+
+func (dto *{{.StructName}}DTO) Validate() error {
+	return XValidate.V(dto)
 }
 
 `
