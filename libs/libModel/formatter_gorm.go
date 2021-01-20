@@ -15,8 +15,8 @@ type FormatterGorm struct {
 	FormatterStruct
 }
 
-func (f *FormatterGorm) Format(table string, cols []Column) IFormatter {
-	f.PackageName = table
+func (f *FormatterGorm) Format(name, table string, cols []Column) IFormatter {
+	f.PackageName = name
 	f.ImportList = make(map[string]ImportItem)
 	f.StructName = utils.CamelString(table)
 	f.TableName = table
@@ -60,8 +60,8 @@ const {{ .StructName }}TableName = "{{ .TableName }}"
 
 // {{ .StructName }}Model is a mapping object for {{ .TableName }} table in mysql
 type {{.StructName}}Model struct {
-{{- range .FieldList }}
 	// gorm.Model 如需伪删除等操作，内嵌gorm.Model可自行打开注释
+{{- range .FieldList }}
 	{{ .Name }} {{ .Type }} {{ .StructTag }} 	// {{ .Comment }}
 {{- end}}
 }

@@ -15,8 +15,8 @@ type FormatterSqlBuilder struct {
 	FormatterStruct
 }
 
-func (f *FormatterSqlBuilder) Format(table string, cols []Column) IFormatter {
-	f.PackageName = table
+func (f *FormatterSqlBuilder) Format(name, table string, cols []Column) IFormatter {
+	f.PackageName = name
 	f.ImportList = make(map[string]ImportItem)
 	f.StructName = utils.CamelString(table)
 	f.TableName = table
@@ -29,6 +29,7 @@ func (f *FormatterSqlBuilder) Format(table string, cols []Column) IFormatter {
 		}
 		if colType == CTypeTime {
 			f.ImportList["time"] = ImportItem{Alias: "", Package: "time"}
+			f.ImportList["dtos"] = ImportItem{Alias: "", Package: "goapp/dtos"}
 		}
 		f.FieldList[idx] = Field{
 			Name:      col.GetName(),
@@ -57,7 +58,7 @@ const {{ .StructName }}TableName = "{{ .TableName }}"
 // {{ .StructName }}Model is a mapping object for {{ .TableName }} table in mysql
 type {{.StructName}}Model struct {
 {{- range .FieldList }}
-	{{ .Name }} {{ .Type }} {{ .StructTag }}
+	{{ .Name }} {{ .Type }} {{ .StructTag }} // {{ .Comment }}
 {{- end}}
 }
 
@@ -66,7 +67,7 @@ func New{{.StructName}}Model() *{{.StructName}}Model {
 }
 
 func (*{{ .StructName }}Model) TableName() string {
-	return {{ .StructName }}TableName	 	// {{ .Comment }}
+	return {{ .StructName }}TableName	 	
 }
 
 

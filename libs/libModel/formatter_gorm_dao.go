@@ -14,8 +14,8 @@ func NewFormatterGormDao() *FormatterGormDao {
 	return new(FormatterGormDao)
 }
 
-func (f *FormatterGormDao) Format(table string, cols []Column) IFormatter {
-	f.PackageName = table
+func (f *FormatterGormDao) Format(name, table string, cols []Column) IFormatter {
+	f.PackageName = name
 	f.StructName = utils.CamelString(table)
 	f.TableName = table
 	f.ImportList = make(map[string]ImportItem)

@@ -76,7 +76,7 @@ func ModelCommandAction(ctx *cli.Context) error {
 		}
 
 		// 格式化输出
-		if err = libModel.NewFormatterGorm().Format(cmdParams.Table, columns).WriteOut(writer); err != nil {
+		if err = libModel.NewFormatterGorm().Format(cmdParams.Name, cmdParams.Table, columns).WriteOut(writer); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameModel, err)
 			return nil
 		} else {
@@ -94,7 +94,7 @@ func ModelCommandAction(ctx *cli.Context) error {
 		}
 
 		// 格式化输出
-		if err = libModel.NewFormatterSqlBuilder().Format(cmdParams.Table, columns).WriteOut(writer); err != nil {
+		if err = libModel.NewFormatterSqlBuilder().Format(cmdParams.Name, cmdParams.Table, columns).WriteOut(writer); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameModel, err)
 			return nil
 		} else {
@@ -112,14 +112,14 @@ func ModelCommandAction(ctx *cli.Context) error {
 
 		switch cmdParams.Formatter {
 		case "gorm":
-			if err = libModel.NewFormatterGormDao().Format(cmdParams.Table, nil).WriteOut(daoWriter); err != nil {
+			if err = libModel.NewFormatterGormDao().Format(cmdParams.Name, cmdParams.Table, nil).WriteOut(daoWriter); err != nil {
 				utils.CommandLogger.Error(utils.CommandNameModel, err)
 				return nil
 			} else {
 				utils.CommandLogger.OK(utils.CommandNameModel, fmt.Sprintf("Write %s GORM Dao File Successful!", utils.CamelString(cmdParams.Table)))
 			}
 		case "sqlbuilder":
-			if err = libModel.NewFormatterSqlBuilderDao().Format(cmdParams.Table, nil).WriteOut(daoWriter); err != nil {
+			if err = libModel.NewFormatterSqlBuilderDao().Format(cmdParams.Name, cmdParams.Table, nil).WriteOut(daoWriter); err != nil {
 				utils.CommandLogger.Error(utils.CommandNameModel, err)
 				return nil
 			} else {
@@ -140,7 +140,7 @@ func ModelCommandAction(ctx *cli.Context) error {
 	}
 
 	// 格式化输出
-	if err = libModel.NewFormatterDTOStruct().Format(cmdParams.Table, columns).WriteOut(dtoWriter); err != nil {
+	if err = libModel.NewFormatterDTOStruct().Format(cmdParams.Name, cmdParams.Table, columns).WriteOut(dtoWriter); err != nil {
 		utils.CommandLogger.Error(utils.CommandNameModel, err)
 		return nil
 	} else {

@@ -89,7 +89,7 @@ func (domain *{{ .StructName }}Domain) Get{{ .StructName }}ById(id uint) (*dtos.
 
 
 // 设置单个字段信息
-func (domain *{{ .StructName }}Domain) Set{{ .StructName }}Info(uid uint, field string, value interface{}) error {
+func (domain *{{ .StructName }}Domain) Set{{ .StructName }}Field(uid uint, field string, value interface{}) error {
 	var err error
 	if err = domain.dao.Set{{ .StructName }}(uid, field, value); err != nil {
 		return common.DomainInnerErrorOnSqlUpdate(err, "SetUserInfo")
@@ -98,7 +98,7 @@ func (domain *{{ .StructName }}Domain) Set{{ .StructName }}Info(uid uint, field 
 }
 
 // 设置多个信息
-func (domain *{{ .StructName }}Domain) Set{{ .StructName }}Infos(id uint, dto dtos.{{ .StructName }}DTO) error {
+func (domain *{{ .StructName }}Domain) Update{{ .StructName }}Infos(id uint, dto dtos.{{ .StructName }}DTO) error {
 	var err error
 	if err = domain.dao.Update{{ .StructName }}(id, dto); err != nil {
 		return common.DomainInnerErrorOnSqlUpdate(err, "SetUserInfos")

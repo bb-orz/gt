@@ -14,20 +14,18 @@ func NewFormatterSqlBuilderDao() *FormatterSqlBuilderDao {
 	return new(FormatterSqlBuilderDao)
 }
 
-func (f *FormatterSqlBuilderDao) Format(table string, cols []Column) IFormatter {
-	f.PackageName = table
+func (f *FormatterSqlBuilderDao) Format(name, table string, cols []Column) IFormatter {
+	f.PackageName = name
 	f.StructName = utils.CamelString(table)
 	f.TableName = table
 	f.ImportList = make(map[string]ImportItem)
 	f.ImportList["dtos"] = ImportItem{Alias: "", Package: "goapp/dtos"}
-	f.ImportList["xgorm"] = ImportItem{Alias: "", Package: "github.com/bb-orz/goinfras/XStore/XGorm"}
-	f.ImportList["gorm"] = ImportItem{Alias: "", Package: "gorm.io/gorm"}
 
 	return f
 }
 
 func (f *FormatterSqlBuilderDao) WriteOut(writer io.Writer) error {
-	return template.Must(template.New("DomainSqlBuilderTemplate").Parse(DomainSqlBuilderDaoCodeTemplate)).Execute(writer, *f)
+	return template.Must(template.New("DomainSqlBuilderDaoTemplate").Parse(DomainSqlBuilderDaoCodeTemplate)).Execute(writer, *f)
 }
 
 // TODO 完善SQL Builder Dao模板
