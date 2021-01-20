@@ -146,7 +146,7 @@ func InitCommandAction(ctx *cli.Context) error {
 	utils.CommandLogger.Info(utils.CommandNameInit, fmt.Sprintf("Git:%v", gitFlag))
 	if gitFlag {
 		utils.CommandLogger.Info(utils.CommandNameInit, "Git init ... ")
-		InitGitCmd := "cd " + nameFlag + " && git init && git checkout -b dev"
+		InitGitCmd := "cd " + nameFlag + " && git init && git checkout -b dev && git remote rm origin"
 		err := utils.ExecShellCommand(InitGitCmd)
 		if err != nil {
 			utils.CommandLogger.Error(utils.CommandNameInit, err)
