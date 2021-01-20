@@ -45,13 +45,15 @@ func (f *FormatterGorm) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("GormTemplate").Parse(GormStructCodeTemplate)).Execute(writer, *f)
 }
 
+// TODO 完善Gorm Model模板，根据goapp_account的实践
 const GormStructCodeTemplate = `package {{ .PackageName }}
-
+ 
 import (
 	{{- range .ImportList }}
 	{{ .Alias }} "{{ .Package }}"
 	{{- end}}
 	"goapp/dtos"
+	// "gorm.io/gorm"
 )
 
 const {{ .StructName }}TableName = "{{ .TableName }}"
@@ -59,6 +61,7 @@ const {{ .StructName }}TableName = "{{ .TableName }}"
 // {{ .StructName }}Model is a mapping object for {{ .TableName }} table in mysql
 type {{.StructName}}Model struct {
 {{- range .FieldList }}
+	// gorm.Model 如需伪删除等操作，内嵌gorm.Model可自行打开注释
 	{{ .Name }} {{ .Type }} {{ .StructTag }} 	// {{ .Comment }}
 {{- end}}
 }

@@ -30,6 +30,7 @@ func (f *FormatterSqlBuilderDao) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("DomainSqlBuilderTemplate").Parse(DomainSqlBuilderDaoCodeTemplate)).Execute(writer, *f)
 }
 
+// TODO 完善SQL Builder Dao模板
 const DomainSqlBuilderDaoCodeTemplate = `package {{ .PackageName }}
 
 import (

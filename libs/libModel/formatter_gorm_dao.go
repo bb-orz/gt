@@ -30,6 +30,7 @@ func (f *FormatterGormDao) WriteOut(writer io.Writer) error {
 	return template.Must(template.New("DomainGormDaoTemplate").Parse(DomainGormDaoCodeTemplate)).Execute(writer, *f)
 }
 
+// TODO 完善Gorm Dao模板，根据goapp_account的实践
 const DomainGormDaoCodeTemplate = `package {{ .PackageName }}
 
 import (
@@ -53,7 +54,7 @@ func New{{ .StructName }}DAO() *{{ .StructName }}DAO {
 func (d *{{ .StructName }}DAO) isExist(where *{{ .StructName }}Model) (bool, error) {
 	var err error
 	var count int64
-	err = XGorm.XDB().Where(where).First(&{{ .StructName }}Model{}).Count(&count).Error
+	err = XGorm.XDB().Model(&{{ .StructName }}Model{}).Where(where).Count(&count).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			// 无记录
