@@ -15,7 +15,7 @@ type FormatterDTO struct {
 	FormatterStruct
 }
 
-func (f *FormatterDTO) Format(tableName string, cols []Column) IFormatter {
+func (f *FormatterDTO) Format(name, tableName string, cols []Column) IFormatter {
 	f.PackageName = "dtos"
 	f.ImportList = make(map[string]ImportItem)
 	f.StructName = utils.CamelString(tableName)
