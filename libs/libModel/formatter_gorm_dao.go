@@ -96,6 +96,40 @@ func (d *{{ .StructName }}DAO) GetById(id uint) (*dtos.{{ .StructName }}DTO, err
 }
 
 
+func (d *{{ .StructName }}DAO) Find(selectField []string, limit, offSet int, orderStm, queryStm string, queryArgs ...string) ([]*dtos.{{ .StructName }}DTO, error) {
+	var err error
+	var results []{{ .StructName }}Model
+	var resultsDTO = make([]*dtos.{{ .StructName }}DTO, 0)
+	var tx *gorm.DB
+
+	tx = XGorm.XDB().Model(&{{ .StructName }}Model{}).Where(queryStm, queryArgs)
+	if selectField != nil {
+		tx = tx.Select(selectField)
+	}
+
+	if orderStm != "" {
+		tx = tx.Order(orderStm)
+	}
+
+	if limit != 0 {
+		tx = tx.Limit(limit)
+	}
+
+	if offSet != 0 {
+		tx = tx.Offset(offSet)
+	}
+
+	if err = tx.Find(&results).Error; err != nil {
+		return nil, err
+	}
+
+	for _, v := range results {
+		resultsDTO = append(resultsDTO, v.ToDTO())
+	}
+
+	return resultsDTO, nil
+}
+
 // 创建
 func (d *{{ .StructName }}DAO) Create(dto *dtos.{{ .StructName }}DTO) (int64, error) {
 	var err error
