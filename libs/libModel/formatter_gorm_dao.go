@@ -97,17 +97,17 @@ func (d *{{ .StructName }}DAO) GetById(id uint) (*dtos.{{ .StructName }}DTO, err
 
 
 // 创建
-func (d *{{ .StructName }}DAO) Create(dto *dtos.{{ .StructName }}DTO) (*dtos.{{ .StructName }}DTO, error) {
+func (d *{{ .StructName }}DAO) Create(dto *dtos.{{ .StructName }}DTO) (int64, error) {
 	var err error
 	var {{ .TableName }}DTO *dtos.{{ .StructName }}DTO
 	var {{ .TableName }}Model {{ .StructName }}Model
 
 	{{ .TableName }}Model.FromDTO(dto)
 	if err = XGorm.XDB().Create(&{{ .TableName }}Model).Error; err != nil {
-		return nil, err
+		return -1, err
 	}
 	{{ .TableName }}DTO = {{ .TableName }}Model.ToDTO()
-	return {{ .TableName }}DTO, nil
+	return int64({{ .TableName }}DTO.Id), nil
 }
 
 
