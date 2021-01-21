@@ -46,7 +46,7 @@ import (
 
 type {{ .StructName }}DAO struct{}
 
-func New{{ .StructName }}DAO() *ResumesDAO {
+func New{{ .StructName }}DAO() *{{ .StructName }}DAO {
 	dao := new({{ .StructName }}DAO)
 	return dao
 }
@@ -126,7 +126,7 @@ func (d *{{ .StructName }}DAO) Set{{ .StructName }}(id uint, field string, value
 }
 
 // 设置多个信息字段,注意DTO Struct的零值,如不能避免零值设置错误请使用Update{{ .StructName }}WithMap方法
-func (d *{{ .StructName }}DAO) UpdateResumes(id uint, dto dtos.ResumesDTO) error {
+func (d *{{ .StructName }}DAO) Update{{ .StructName }}(id uint, dto dtos.{{ .StructName }}DTO) error {
 	var err error
 	var where = make(map[string]interface{})
 	var updater = make(map[string]interface{})
@@ -162,7 +162,7 @@ func (d *{{ .StructName }}DAO) DeleteById(id uint) error {
 
 // 伪删除
 func (d *{{ .StructName }}DAO) SetDeletedAtById(id uint) error {
-	return d.SetResumes(id, "deleted_at", time.Now())
+	return d.Set{{ .StructName }}(id, "deleted_at", time.Now())
 }
 
 `
