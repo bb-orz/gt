@@ -68,14 +68,14 @@ func (domain *{{ .StructName }}Domain) Is{{ .StructName }}Exist(id uint) (bool, 
 }
 
 // 创建
-func (domain *{{ .StructName }}Domain) Create{{ .StructName }}(dto dtos.{{ .StructName }}DTO) (*dtos.{{ .StructName }}DTO, error) {
+func (domain *{{ .StructName }}Domain) Create{{ .StructName }}(dto dtos.{{ .StructName }}DTO) (int64, error) {
 	var err error
-	var result *dtos.{{ .StructName }}DTO
+	var insertId int64
 
-	if result, err = domain.dao.Create(&dto); err != nil {
-		return nil, common.DomainInnerErrorOnSqlInsert(err, "Create")
+	if insertId, err = domain.dao.Create(&dto); err != nil {
+		return -1, common.DomainInnerErrorOnSqlInsert(err, "Create")
 	}
-	return result, nil
+	return insertId, nil
 }
 
 func (domain *{{ .StructName }}Domain) Get{{ .StructName }}ById(id uint) (*dtos.{{ .StructName }}DTO, error) {
