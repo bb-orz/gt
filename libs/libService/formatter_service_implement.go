@@ -15,12 +15,11 @@ type FormatterServiceImplement struct {
 }
 
 func (f *FormatterServiceImplement) Format(name, version string) IFormatter {
-	f.PackageName = "core"
+	f.PackageName = "services"
 	f.StructName = utils.CamelString(name)
 	f.Version = version
 	f.ImportList = make(map[string]ImportItem)
 	f.ImportList["dtos"] = ImportItem{Alias: "", Package: "goapp/dtos"}
-	f.ImportList["services"] = ImportItem{Alias: "", Package: "goapp/services"}
 	f.ImportList["sync"] = ImportItem{Alias: "", Package: "sync"}
 	f.ImportList["fmt"] = ImportItem{Alias: "", Package: "fmt"}
 
@@ -44,12 +43,12 @@ import (
 */
 
 
-var _ services.IService{{ .StructName }} = new(Service{{ .StructName }}{{ .Version }})
+var _ IService{{ .StructName }} = new(Service{{ .StructName }}{{ .Version }})
 
 func init() {
 	var once sync.Once
 	once.Do(func() {
-		services.SetService{{ .StructName }}(new(Service{{ .StructName }}{{ .Version }}))
+		SetService{{ .StructName }}(new(Service{{ .StructName }}{{ .Version }}))
 	})
 }
 

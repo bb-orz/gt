@@ -42,7 +42,7 @@ func (f *FormatterDTO) Format(name, tableName string, cols []Column) IFormatter 
 			Comment: col.GetComment(),
 		}
 
-		field.StructTag = fmt.Sprintf("`validate:\"required,%s\" json:\"%s\"`", dtoType, col.Name)
+		field.StructTag = fmt.Sprintf("`validate:\"%s\" json:\"%s\"`", dtoType, col.Name)
 		f.FieldList[idx] = field
 	}
 	return f
