@@ -34,7 +34,7 @@ func RestfulCommandAction(ctx *cli.Context) error {
 	var fileWriter io.Writer
 
 	// 检查服务接口是否存在，不存在则创建
-	fileName := cmdParams.OutputPath + "/" + cmdParams.Name + "_api.go"
+	fileName := cmdParams.OutputPath + "/" + cmdParams.Name + "_restful.go"
 	if !IsServiceFileExist(fileName) {
 		if fileWriter, err = utils.CreateFile(fileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameRestful, err)
