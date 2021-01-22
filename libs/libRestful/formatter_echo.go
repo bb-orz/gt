@@ -54,7 +54,7 @@ type {{ .StructName }}Api struct {}
 // SetRouter由Echo Engine 启动时调用
 func (s *{{ .StructName }}Api) SetRoutes() {
 	engine := XEcho.XEngine()
-	{{ .RouteGroup }}Group := engine.Group("{{ .RouteGroup }}")
+	{{ .RouteGroup }}Group := engine.Group("/{{ .RouteGroup }}")
 	{{ .RouteGroup }}Group.GET("/foo", s.Foo)
 	{{ .RouteGroup }}Group.GET("/bar", s.Bar)
 }
