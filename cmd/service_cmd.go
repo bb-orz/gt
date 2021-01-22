@@ -59,7 +59,7 @@ func ServiceCommandAction(ctx *cli.Context) error {
 	}
 
 	// 创建实现服务指定版本的文件
-	implementFileName := cmdParams.MOutputPath + "/" + cmdParams.Name + "_service_" + cmdParams.Version + ".go"
+	implementFileName := cmdParams.MOutputPath + "/" + cmdParams.Name + "_service_" + utils.SnakeString(cmdParams.Version) + ".go"
 	if !IsServiceFileExist(implementFileName) {
 		if implementFile, err = utils.CreateFile(implementFileName); err != nil {
 			utils.CommandLogger.Error(utils.CommandNameService, err)

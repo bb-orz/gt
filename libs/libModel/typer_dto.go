@@ -12,12 +12,12 @@ const (
 	DTypeInt64   = "numeric"
 	DTypeInt     = "numeric"
 	DTypeUInt    = "numeric,gt=0"
-	DTypeString  = "alphanumunicode"
+	DTypeString  = "alphanum"
 	DTypeFloat64 = "numeric"
 	DTypeTime    = "numeric"
 	DTypeInt8    = "numeric"
 	DTypeUInt64  = "numeric,gt=0"
-	DTypeByte    = "alphanumunicode"
+	DTypeByte    = "alphanum"
 	DUnsigned    = "alphanum"
 )
 
