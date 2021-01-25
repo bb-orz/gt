@@ -16,6 +16,7 @@ type FormatterServiceInterface struct {
 
 func (f *FormatterServiceInterface) Format(name, version string) IFormatter {
 	f.PackageName = "services"
+	f.Name = name
 	f.StructName = utils.CamelString(name)
 	f.ImportList = make(map[string]ImportItem)
 	f.ImportList["dtos"] = ImportItem{Alias: "", Package: "goapp/dtos"}
@@ -35,17 +36,17 @@ import (
 	{{- end}}
 )
 
-var service{{ .StructName }} IService{{ .StructName }}
+var {{ .Name }}Service I{{ .StructName }}Service
 
-func SetService{{ .StructName }}(sv IService{{ .StructName }}) {
-	service{{ .StructName }} = sv
+func Set{{ .StructName }}Service(sv I{{ .StructName }}Service) {
+	{{ .Name }}Service = sv
 }
 
-func GetService{{ .StructName }}() IService{{ .StructName }} {
-	return service{{ .StructName }}
+func Get{{ .StructName }}Service() I{{ .StructName }}Service{
+	return {{ .Name }}Service
 }
 
-type IService{{ .StructName }} interface {
+type I{{ .StructName }}Service interface {
 	Foo(i dtos.FooDTO) error
 	Bar(i dtos.BarDTO) error
 }
