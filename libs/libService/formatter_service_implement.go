@@ -16,6 +16,7 @@ type FormatterServiceImplement struct {
 
 func (f *FormatterServiceImplement) Format(name, version string) IFormatter {
 	f.PackageName = "services"
+	f.Name = name
 	f.StructName = utils.CamelString(name)
 	f.Version = version
 	f.ImportList = make(map[string]ImportItem)
@@ -43,19 +44,19 @@ import (
 */
 
 
-var _ IService{{ .StructName }} = new(Service{{ .StructName }}{{ .Version }})
+var _ I{{ .StructName }}Service = new({{ .StructName }}Service{{ .Version }})
 
 func init() {
 	var once sync.Once
 	once.Do(func() {
-		SetService{{ .StructName }}(new(Service{{ .StructName }}{{ .Version }}))
+		Set{{ .StructName }}Service(new({{ .StructName }}Service{{ .Version }}))
 	})
 }
 
-type Service{{ .StructName }}{{ .Version }} struct{}
+type {{ .StructName }}Service{{ .Version }} struct{}
 
 
-func (s *Service{{ .StructName }}{{ .Version }}) Foo(i dtos.FooDTO) error {
+func (s *{{ .StructName }}Service{{ .Version }}) Foo(i dtos.FooDTO) error {
 	var err error
 	// TODO Call Domain
 	fmt.Println("Service {{ .StructName }}{{ .Version }}.Foo")
@@ -64,7 +65,7 @@ func (s *Service{{ .StructName }}{{ .Version }}) Foo(i dtos.FooDTO) error {
 }
 
 
-func (s *Service{{ .StructName }}{{ .Version }}) Bar(i dtos.BarDTO) error {
+func (s *{{ .StructName }}Service{{ .Version }}) Bar(i dtos.BarDTO) error {
 	var err error
 	// TODO  Call Domain
 	fmt.Println("Service {{ .StructName }}{{ .Version }}.Bar")
