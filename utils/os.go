@@ -38,11 +38,11 @@ func GetLastPath(p string) string {
 	return base
 }
 
-// 替换项目中的主包名
+// TODO 替换项目中的主包名
 func ReplaceMainPackageNAme(pwd, name string) error {
 	CommandLogger.Warning("Init", fmt.Sprintf("You create a new project,please replace main package name from 'goapp' to '%s'", name))
-	// TODO 遍历项目每一个文件
-	// TODO 读取每个文件前n行
-	// TODO 替换成特定包名
+	// 遍历项目每一个文件
+	// 读取每个文件前n行
+	// 替换成特定包名
 	return nil
 }
