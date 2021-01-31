@@ -20,7 +20,10 @@ func (f *FormatterSqlBuilder) Format(name, table string, cols []Column) IFormatt
 	f.ImportList = make(map[string]ImportItem)
 	f.StructName = utils.CamelString(table)
 	f.TableName = table
-	f.FieldList = make([]Field, len(cols))
+	f.ModelFieldList = make([]Field, len(cols))
+	f.DTOFieldList = make([]Field, len(cols))
+	f.CreateDTOFieldList = make([]Field, 0)
+	f.UpdateDTOFieldList = make([]Field, 0)
 
 	for idx, col := range cols {
 		colType, err := col.GetType()
@@ -31,11 +34,27 @@ func (f *FormatterSqlBuilder) Format(name, table string, cols []Column) IFormatt
 			f.ImportList["time"] = ImportItem{Alias: "", Package: "time"}
 			f.ImportList["dtos"] = ImportItem{Alias: "", Package: "goapp/dtos"}
 		}
-		f.FieldList[idx] = Field{
+		f.ModelFieldList[idx] = Field{
 			Name:      col.GetName(),
 			Type:      colType,
 			StructTag: fmt.Sprintf("`ddb:\"%s\" json:\"%s\"`", col.Name, col.Name),
 			Comment:   col.GetComment(),
+		}
+
+		f.DTOFieldList[idx] = Field{
+			Name: col.GetName(),
+		}
+
+		if !utils.InStringSlice(col.GetName(), []string{"Id", "CreatedAt", "UpdatedAt", "DeletedAt"}) {
+			f.CreateDTOFieldList = append(f.CreateDTOFieldList, Field{
+				Name: col.GetName(),
+			})
+		}
+
+		if !utils.InStringSlice(col.GetName(), []string{"CreatedAt", "UpdatedAt", "DeletedAt"}) {
+			f.UpdateDTOFieldList = append(f.UpdateDTOFieldList, Field{
+				Name: col.GetName(),
+			})
 		}
 	}
 	return f
@@ -57,7 +76,7 @@ const {{ .StructName }}TableName = "{{ .TableName }}"
 
 // {{ .StructName }}Model is a mapping object for {{ .TableName }} table in mysql
 type {{.StructName}}Model struct {
-{{- range .FieldList }}
+{{- range .ModelFieldList }}
 	{{ .Name }} {{ .Type }} {{ .StructTag }} // {{ .Comment }}
 {{- end}}
 }
@@ -74,7 +93,7 @@ func (*{{ .StructName }}Model) TableName() string {
 // To DTO
 func (m *{{ .StructName }}Model) ToDTO() *dtos.{{ .StructName }}DTO {
 	return &dtos.{{ .StructName }}DTO{
-		{{- range .FieldList }}
+		{{- range .DTOFieldList }}
 			{{ .Name }} : m.{{ .Name }},
 		{{- end}}
 	}
@@ -82,10 +101,23 @@ func (m *{{ .StructName }}Model) ToDTO() *dtos.{{ .StructName }}DTO {
 
 // From DTO
 func (m *{{ .StructName }}Model) FromDTO(dto *dtos.{{ .StructName }}DTO) {
-	{{- range .FieldList }}
+	{{- range .DTOFieldList }}
 		m.{{ .Name }} = dto.{{ .Name }}
 	{{- end}}
 }
 
+// From CreateDTO
+func (m *{{ .StructName }}Model) FromCreateDTO(dto *dtos.Create{{ .StructName }}DTO) {
+	{{- range .CreateDTOFieldList }}
+		m.{{ .Name }} = dto.{{ .Name }}
+	{{- end}}
+}
+
+// From UpdateDTO
+func (m *{{ .StructName }}Model) FromUpdateDTO(dto *dtos.Update{{ .StructName }}DTO) {
+	{{- range .UpdateDTOFieldList }}
+		m.{{ .Name }} = dto.{{ .Name }}
+	{{- end}}
+}
 
 `

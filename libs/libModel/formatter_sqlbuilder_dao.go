@@ -99,7 +99,7 @@ func (d *{{ .StructName }}DAO) Find(where map[string]interface{}, selectField []
 }
 
 // 创建
-func (d *{{ .StructName }}DAO) Create(dto *dtos.{{ .StructName }}DTO) (int64, error) {
+func (d *{{ .StructName }}DAO) Create(dto *dtos.Create{{ .StructName }}DTO) (int64, error) {
 	var err error
 	var data []map[string]interface{}
 	var insertId int64
@@ -126,11 +126,11 @@ func (d *{{ .StructName }}DAO) Set{{ .StructName }}(id uint, field string, value
 }
 
 // 设置多个信息字段,注意DTO Struct的零值,如不能避免零值设置错误请使用Update{{ .StructName }}WithMap方法
-func (d *{{ .StructName }}DAO) Update{{ .StructName }}(id uint, dto dtos.{{ .StructName }}DTO) error {
+func (d *{{ .StructName }}DAO) Update{{ .StructName }}(dto dtos.Update{{ .StructName }}DTO) error {
 	var err error
 	var where = make(map[string]interface{})
 	var updater = make(map[string]interface{})
-	where["id"] = id
+	where["id"] = dto.Id
 	updater = common.Struct2Map(dto)
 	if _, err = XSQLBuilder.XCommon().Update({{ .StructName }}TableName, where, updater); err != nil {
 		return err
