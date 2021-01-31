@@ -68,7 +68,7 @@ func (domain *{{ .StructName }}Domain) Is{{ .StructName }}Exist(id uint) (bool, 
 }
 
 // 创建
-func (domain *{{ .StructName }}Domain) Create{{ .StructName }}(dto dtos.{{ .StructName }}DTO) (int64, error) {
+func (domain *{{ .StructName }}Domain) Create{{ .StructName }}(dto dtos.Create{{ .StructName }}DTO) (int64, error) {
 	var err error
 	var insertId int64
 
@@ -98,9 +98,9 @@ func (domain *{{ .StructName }}Domain) Set{{ .StructName }}Field(uid uint, field
 }
 
 // 设置多个信息
-func (domain *{{ .StructName }}Domain) Update{{ .StructName }}Infos(id uint, dto dtos.{{ .StructName }}DTO) error {
+func (domain *{{ .StructName }}Domain) Update{{ .StructName }}Infos(dto dtos.Update{{ .StructName }}DTO) error {
 	var err error
-	if err = domain.dao.Update{{ .StructName }}(id, dto); err != nil {
+	if err = domain.dao.Update{{ .StructName }}(dto); err != nil {
 		return common.DomainInnerErrorOnSqlUpdate(err, "SetUserInfos")
 	}
 

@@ -12,13 +12,13 @@ const (
 	DTypeInt64   = "numeric"
 	DTypeInt     = "numeric"
 	DTypeUInt    = "numeric,gt=0"
-	DTypeString  = "alphanum"
+	DTypeString  = "alphanumunicode"
 	DTypeFloat64 = "numeric"
-	DTypeTime    = "numeric"
+	DTypeTime    = "alphanumunicode"
 	DTypeInt8    = "numeric"
 	DTypeUInt64  = "numeric,gt=0"
-	DTypeByte    = "alphanum"
-	DUnsigned    = "alphanum"
+	DTypeByte    = "alphanumunicode"
+	DUnsigned    = "numeric,gt=0"
 )
 
 type typerDTO interface {

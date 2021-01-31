@@ -20,30 +20,54 @@ func (f *FormatterDTO) Format(name, tableName string, cols []Column) IFormatter 
 	f.ImportList = make(map[string]ImportItem)
 	f.StructName = utils.CamelString(tableName)
 	f.TableName = tableName
-	f.FieldList = make([]Field, len(cols))
+	f.DTOFieldList = make([]Field, len(cols)) // 所有字段
+	f.CreateDTOFieldList = make([]Field, 0)   // 除去id、created_at、updated_at、deleted_at 的所有字段，用于创新条目时的数据校验
+	f.UpdateDTOFieldList = make([]Field, 0)   // 除去 created_at、updated_at、deleted_at 的所有字段，用于更新条目时的数据校验
 
 	for idx, col := range cols {
-		colType, err := col.GetType()
-		if nil != err {
+		var err error
+		var dtoType string
+		var colType string
+		if colType, err = col.GetType(); err != nil {
 			continue
 		}
+		if dtoType, err = col.GetDTOType(); err != nil {
+			continue
+		}
+
 		if colType == CTypeTime {
 			f.ImportList["time"] = ImportItem{Alias: "", Package: "time"}
 			f.ImportList["validate"] = ImportItem{Alias: "", Package: "github.com/bb-orz/goinfras/XValidate"}
 		}
 
-		dtoType, err := col.GetDTOType()
-		if nil != err {
-			continue
-		}
-		field := Field{
-			Name:    col.GetName(),
-			Type:    colType,
-			Comment: col.GetComment(),
+		// DTO field
+		f.DTOFieldList[idx] = Field{
+			Name:      col.GetName(),
+			Type:      colType,
+			Comment:   col.GetComment(),
+			StructTag: fmt.Sprintf("`json:\"%s\"`", col.Name),
 		}
 
-		field.StructTag = fmt.Sprintf("`validate:\"%s\" json:\"%s\"`", dtoType, col.Name)
-		f.FieldList[idx] = field
+		// CreateDTO
+		if !utils.InStringSlice(col.GetName(), []string{"Id", "CreatedAt", "UpdatedAt", "DeletedAt"}) {
+			f.CreateDTOFieldList = append(f.CreateDTOFieldList, Field{
+				Name:      col.GetName(),
+				Type:      colType,
+				Comment:   col.GetComment(),
+				StructTag: fmt.Sprintf("`validate:\"%s\" json:\"%s\"`", dtoType, col.Name),
+			})
+		}
+
+		// UpdateDTO
+		if !utils.InStringSlice(col.GetName(), []string{"CreatedAt", "UpdatedAt", "DeletedAt"}) {
+			f.UpdateDTOFieldList = append(f.UpdateDTOFieldList, Field{
+				Name:      col.GetName(),
+				Type:      colType,
+				Comment:   col.GetComment(),
+				StructTag: fmt.Sprintf("`validate:\"%s\" json:\"%s\"`", dtoType, col.Name),
+			})
+		}
+
 	}
 	return f
 }
@@ -62,13 +86,34 @@ import (
 
 // {{ .StructName }}DTO is a mapping object for {{ .TableName }} table in mysql
 type {{.StructName}}DTO struct {
-{{- range .FieldList }}
+{{- range .DTOFieldList }}
 	{{ .Name }} {{ .Type }} {{ .StructTag }} 		// {{ .Comment }}
 {{- end}}
 }
 
-func (dto *{{.StructName}}DTO) Validate() error {
+// Create{{ .StructName }}DTO
+type Create{{.StructName}}DTO struct {
+{{- range .CreateDTOFieldList }}
+	{{ .Name }} {{ .Type }} {{ .StructTag }} 		// {{ .Comment }}
+{{- end}}
+}
+
+
+func (dto *Create{{.StructName}}DTO) Validate() error {
 	return XValidate.V(dto)
 }
+
+// Update{{ .StructName }}DTO
+type Update{{.StructName}}DTO struct {
+{{- range .UpdateDTOFieldList }}
+	{{ .Name }} {{ .Type }} {{ .StructTag }} 		// {{ .Comment }}
+{{- end}}
+}
+
+
+func (dto *Update{{.StructName}}DTO) Validate() error {
+	return XValidate.V(dto)
+}
+
 
 `

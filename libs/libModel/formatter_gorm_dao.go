@@ -73,7 +73,22 @@ func (d *{{ .StructName }}DAO) isExist(where *{{ .StructName }}Model) (bool, err
 
 // 查找id是否存在
 func (d *{{ .StructName }}DAO) IsIdExist(id uint) (bool, error) {
-	return d.isExist(&{{ .StructName }}Model{Id: id})
+	var err error
+	var count int64
+	err = XGorm.XDB().Model(&{{ .StructName }}Model{}).Where("id = ?", id).Count(&count).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			// 无记录
+			return false, nil
+		} else {
+			// 除无记录外的错误返回
+			return false, err
+		}
+	}
+	if count > 0 {
+		return true, nil
+	}
+	return false, nil
 }
 
 
@@ -131,12 +146,12 @@ func (d *{{ .StructName }}DAO) Find(selectField []string, limit, offSet int, ord
 }
 
 // 创建
-func (d *{{ .StructName }}DAO) Create(dto *dtos.{{ .StructName }}DTO) (int64, error) {
+func (d *{{ .StructName }}DAO) Create(dto *dtos.Create{{ .StructName }}DTO) (int64, error) {
 	var err error
 	var {{ .TableName }}DTO *dtos.{{ .StructName }}DTO
 	var {{ .TableName }}Model {{ .StructName }}Model
 
-	{{ .TableName }}Model.FromDTO(dto)
+	{{ .TableName }}Model.FromCreateDTO(dto)
 	if err = XGorm.XDB().Create(&{{ .TableName }}Model).Error; err != nil {
 		return -1, err
 	}
@@ -156,10 +171,10 @@ func (d *{{ .StructName }}DAO) Set{{ .StructName }}(id uint, field string, value
 }
 
 // 设置多个信息字段
-func (d *{{ .StructName }}DAO) Update{{ .StructName }}(id uint, dto dtos.{{ .StructName }}DTO) error {
+func (d *{{ .StructName }}DAO) Update{{ .StructName }}(dto dtos.Update{{ .StructName }}DTO) error {
 	var err error
 
-	if err = XGorm.XDB().Model(&{{ .StructName }}Model{}).Where("id", id).Updates(&dto).Error; err != nil {
+	if err = XGorm.XDB().Model(&{{ .StructName }}Model{}).Where("id", dto.Id).Updates(&dto).Error; err != nil {
 		return err
 	}
 	return nil
