@@ -173,8 +173,9 @@ func (d *{{ .StructName }}DAO) Set{{ .StructName }}(id uint, field string, value
 // 设置多个信息字段
 func (d *{{ .StructName }}DAO) Update{{ .StructName }}(dto dtos.Update{{ .StructName }}DTO) error {
 	var err error
-
-	if err = XGorm.XDB().Model(&{{ .StructName }}Model{}).Where("id", dto.Id).Updates(&dto).Error; err != nil {
+	var updater {{ .StructName }}Model
+	updater.FromUpdateDTO(dto)
+	if err = XGorm.XDB().Model(&{{ .StructName }}Model{}).Where("id", dto.Id).Updates(&updater).Error; err != nil {
 		return err
 	}
 	return nil
