@@ -98,7 +98,7 @@ func (domain *{{ .StructName }}Domain) Set{{ .StructName }}Field(uid uint, field
 }
 
 // 设置多个信息
-func (domain *{{ .StructName }}Domain) Update{{ .StructName }}Infos(dto dtos.Update{{ .StructName }}DTO) error {
+func (domain *{{ .StructName }}Domain) Update{{ .StructName }}Infos(dto *dtos.Update{{ .StructName }}DTO) error {
 	var err error
 	if err = domain.dao.Update{{ .StructName }}(dto); err != nil {
 		return common.DomainInnerErrorOnSqlUpdate(err, "SetUserInfos")
