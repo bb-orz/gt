@@ -171,7 +171,7 @@ func (d *{{ .StructName }}DAO) Set{{ .StructName }}(id uint, field string, value
 }
 
 // 设置多个信息字段
-func (d *{{ .StructName }}DAO) Update{{ .StructName }}(dto dtos.Update{{ .StructName }}DTO) error {
+func (d *{{ .StructName }}DAO) Update{{ .StructName }}(dto *dtos.Update{{ .StructName }}DTO) error {
 	var err error
 	var updater {{ .StructName }}Model
 	updater.FromUpdateDTO(dto)
