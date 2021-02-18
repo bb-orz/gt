@@ -54,7 +54,7 @@ func (f *FormatterDTO) Format(name, tableName string, cols []Column) IFormatter 
 				Name:      col.GetName(),
 				Type:      colType,
 				Comment:   col.GetComment(),
-				StructTag: fmt.Sprintf("`validate:\"%s\" json:\"%s\"`", dtoType, col.Name),
+				StructTag: fmt.Sprintf("`json:\"%s\" validate:\"%s\"`", col.Name, dtoType),
 			})
 		}
 
@@ -64,7 +64,7 @@ func (f *FormatterDTO) Format(name, tableName string, cols []Column) IFormatter 
 				Name:      col.GetName(),
 				Type:      colType,
 				Comment:   col.GetComment(),
-				StructTag: fmt.Sprintf("`validate:\"%s\" json:\"%s\"`", dtoType, col.Name),
+				StructTag: fmt.Sprintf("`json:\"%s\" validate:\"%s\"`", col.Name, dtoType),
 			})
 		}
 

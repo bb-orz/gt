@@ -20,7 +20,7 @@ func (f *FormatterServiceDto) Format(name, version string) IFormatter {
 	f.StructName = utils.CamelString(name)
 	f.FieldList = make([]Field, 0)
 	exampleFile := Field{Name: "Id", Type: "uint", Comment: "示例参数"}
-	exampleFile.StructTag = fmt.Sprintf("`validate:\"required,numeric\" json:\"%s\"`", name)
+	exampleFile.StructTag = fmt.Sprintf("`json:\"%s\" validate:\"required,numeric\"`", name)
 	f.FieldList = append(f.FieldList, exampleFile)
 
 	return f
